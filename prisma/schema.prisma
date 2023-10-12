@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model Department {
+    id          String        @id
+    name        String
+    founding    DateTime
+    description String?
+    specialized Specialized[]
+    Class       Class[]
+    Student     Student[]
+}
+
+model Specialized {
+    id            String      @id
+    name          String
+    description   String?
+    department_id String?
+    department    Department? @relation(fields: [department_id], references: [id], onDelete: SetNull)
+    Class         Class[]
+    Student       Student[]
+}
+
+model SchoolYear {
+    id         Int       @id @default(autoincrement())
+    schoolyear String
+    Class      Class[]
+    Student    Student[]
+}
+
+enum Status {
+    STUDYING
+    STOP
+    RESERVE
+}
+
+model Class {
+    id             Int          @id @default(autoincrement())
+    name           String
+    department_id  String?
+    specialized_id String?
+    schoolyear_id  Int?
+    department     Department?  @relation(fields: [department_id], references: [id], onDelete: SetNull)
+    specialized    Specialized? @relation(fields: [specialized_id], references: [id], onDelete: SetNull)
+    schoolyear     SchoolYear?  @relation(fields: [schoolyear_id], references: [id], onDelete: SetNull)
+    Student        Student[]
+}
+
+enum Gender {
+    MALE
+    FEMALE
+}
+
+model Student {
+    id             String       @id
+    fullname       String
+    address        String
+    birth          DateTime
+    phone          String
+    schoolyear     SchoolYear?  @relation(fields: [schoolyear_id], references: [id], onDelete: SetNull)
+    schoolyear_id  Int?
+    department     Department?  @relation(fields: [department_id], references: [id], onDelete: SetNull)
+    department_id  String?
+    specialized    Specialized? @relation(fields: [specialized_id], references: [id], onDelete: SetNull)
+    specialized_id String?
+    class          Class?       @relation(fields: [class_id], references: [id], onDelete: SetNull)
+    class_id       Int?
+    status         Status       @default(STUDYING)
+    gpa            Float
+    email          String       @unique
+    gender         Gender?
+}
