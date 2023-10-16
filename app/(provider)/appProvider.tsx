@@ -5,25 +5,36 @@ import { motion } from "framer-motion";
 interface IAppContext {
     theme: string | null;
     changeTheme: (theme: string) => void;
+    chartTheme: string;
+    changeChartTheme: (theme: string) => void;
 }
 interface IProps {
     children: React.ReactNode;
 }
 export const AppContext = createContext<IAppContext>({} as IAppContext);
 function AppProvider({ children }: IProps) {
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [theme, setTheme] = useState<string | null>(null);
-
+    const [isFistRender, setIsFistRender] = useState(true);
+    const [chartTheme, setChartTheme] = useState<string>("palette2");
     useEffect(() => {
         const currentTheme = localStorage.getItem("theme");
+        const currentChartTheme = localStorage.getItem("chartTheme");
         if (currentTheme) {
             setTheme(currentTheme as string);
             document.documentElement?.setAttribute("data-theme", currentTheme);
         } else {
-            setTheme("cmyk");
+            setTheme("cupcake");
             document.documentElement?.setAttribute("data-theme", "cmyk");
         }
+        if (currentChartTheme) {
+            setChartTheme(currentChartTheme);
+        } else {
+            setChartTheme("palette2");
+        }
+
         setTimeout(() => setLoading(false), 1500);
+        setIsFistRender(false);
     }, [setTheme]);
 
     const changeTheme = (theme: string) => {
@@ -31,9 +42,15 @@ function AppProvider({ children }: IProps) {
         document.documentElement?.setAttribute("data-theme", theme);
         localStorage.setItem("theme", theme);
     };
+    const changeChartTheme = (theme: string) => {
+        setChartTheme(theme);
+        localStorage.setItem("chartTheme", theme);
+    };
     return (
-        <AppContext.Provider value={{ theme, changeTheme }}>
-            {loading ? (
+        <AppContext.Provider
+            value={{ theme, changeTheme, chartTheme, changeChartTheme }}
+        >
+            {loading && isFistRender ? (
                 <motion.div
                     data-theme="cupcake"
                     initial={{ opacity: 1 }}
@@ -61,5 +78,8 @@ function AppProvider({ children }: IProps) {
         </AppContext.Provider>
     );
 }
-
+const useAppContext = () => {
+    return React.useContext(AppContext);
+};
+export { useAppContext };
 export default AppProvider;

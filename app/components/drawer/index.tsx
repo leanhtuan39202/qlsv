@@ -25,8 +25,20 @@ const menu = [
         href: "/student",
     },
     {
+        label: "Quản lý giảng viên",
+        href: "/instructor",
+    },
+    {
+        label: "Quản lý môn học",
+        href: "/subject",
+    },
+    {
+        label: "Quản lý điểm",
+        href: "/score",
+    },
+    {
         label: "Quản lý lớp",
-        href: "/classes",
+        href: "/class",
     },
     {
         label: "Quản lý niên khoá",
@@ -49,7 +61,7 @@ const Drawer: React.FC<Props> = ({ children }) => {
                     aria-label="close sidebar"
                     className="drawer-overlay"
                 ></label>
-                <div className="hidden lg:flex h-16 p-4 items-center bg-base-300">
+                <div className="hidden lg:flex h-16 p-4 items-center bg-base-300 sticky top-0 z-10">
                     <Link
                         href={"/"}
                         className="flex items-center text-lg uppercase font-bold"
@@ -64,7 +76,7 @@ const Drawer: React.FC<Props> = ({ children }) => {
                         />
                         <div className="ml-4">
                             <span className="text-primary">Quản lý</span>{" "}
-                            <span className="text-secondary">sinh viên</span>
+                            <span className="text-base-content">sinh viên</span>
                         </div>
                     </Link>
                 </div>

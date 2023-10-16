@@ -50,7 +50,6 @@ function Page() {
             field: "department.name",
             headerName: "Tên khoa",
             floatingFilter: true,
-            filter: "set",
         },
         {
             field: "name",
@@ -103,14 +102,14 @@ function Page() {
 
                     <div className="ml-auto flex gap-2"></div>
                 </div>
-                <div className="ag-theme-material w-full h-screen">
+                <div className="ag-theme-alpine w-full h-screen">
                     <div className="h-2/3">
                         <AgGridReact
                             defaultColDef={{
                                 flex: 1,
                                 sortable: true,
                                 resizable: true,
-                                filter: "text",
+                                filter: true,
                             }}
                             columnDefs={columnDefs}
                             rowData={spec}

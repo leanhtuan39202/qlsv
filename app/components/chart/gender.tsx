@@ -1,11 +1,13 @@
 "use client";
+import { AppContext } from "@/app/(provider)/appProvider";
 import { getAllStudents } from "@/app/lib/prisma/student";
 import { Student, Gender } from "@prisma/client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 function GenderChart() {
     const [student, setStudent] = useState<Student[]>([] as Student[]);
     const [chartData, setChartData] = useState<number[]>([]);
+    const { chartTheme } = useContext(AppContext);
 
     useEffect(() => {
         (async () => {
@@ -36,7 +38,7 @@ function GenderChart() {
                             type="bar"
                             options={{
                                 title: {
-                                    text: "Tỉ lệ giới tính",
+                                    text: "Giới tính",
                                     align: "left",
                                     style: {
                                         fontSize: "16px",
@@ -57,7 +59,7 @@ function GenderChart() {
                                     },
                                 },
                                 theme: {
-                                    palette: "palette8",
+                                    palette: chartTheme,
                                 },
                                 xaxis: {
                                     categories: ["Nam", "Nữ"],

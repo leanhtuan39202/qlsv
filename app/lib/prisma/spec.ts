@@ -6,7 +6,17 @@ const getAllSpecialized = async () => {
     const specialized = await prisma.specialized.findMany({
         include: {
             department: true,
-
+        }
+    });
+    return specialized
+}
+const getSpecializedById = async (id: string) => {
+    const specialized = await prisma.specialized.findUnique({
+        where: {
+            id,
+        },
+        include: {
+            department: true,
         }
     });
     return specialized
@@ -31,4 +41,4 @@ const updateSpecialized = async (specialized: Specialized) => {
         data: specialized,
     });
 }
-export { getAllSpecialized, addSpecialized, deleteSpecialized, updateSpecialized }
+export { getAllSpecialized, addSpecialized, deleteSpecialized, updateSpecialized, getSpecializedById }

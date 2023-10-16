@@ -4,15 +4,7 @@ import prisma from ".";
 
 const getAllStudents = async () => {
     const students = await prisma.student.findMany({
-        select: {
-            id: true,
-            fullname: true,
-            address: true,
-            gpa: true,
-            status: true,
-            gender: true,
 
-        }
     });
     return students;
 }

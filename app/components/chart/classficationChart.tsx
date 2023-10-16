@@ -1,7 +1,8 @@
 "use client";
+import { AppContext } from "@/app/(provider)/appProvider";
 import { getAllStudents } from "@/app/lib/prisma/student";
-import { Student, Gender } from "@prisma/client";
-import React, { useEffect, useState } from "react";
+import { Student } from "@prisma/client";
+import React, { useEffect, useState, useContext } from "react";
 import Chart from "react-apexcharts";
 
 function ClassficationChart() {
@@ -29,7 +30,7 @@ function ClassficationChart() {
             setChartData([xuatSac, gioi, kha, tb, yeu]);
         })();
     }, []);
-
+    const { chartTheme } = useContext(AppContext);
     return (
         <div className="w-96 bg-base-200 p-4 mt-6 rounded-md shadow-xl">
             <div className="flex flex-row justify-between items-center">
@@ -44,10 +45,10 @@ function ClassficationChart() {
                             type="bar"
                             options={{
                                 theme: {
-                                    palette: "palette8",
+                                    palette: chartTheme,
                                 },
                                 title: {
-                                    text: "Xếp hạng",
+                                    text: "Xếp loại",
                                     align: "left",
                                     style: {
                                         fontSize: "16px",

@@ -18,6 +18,8 @@ model Department {
     specialized Specialized[]
     Class       Class[]
     Student     Student[]
+    Instructor  Instructor[]
+    Subject     Subject[]
 }
 
 model Specialized {
@@ -25,7 +27,7 @@ model Specialized {
     name          String
     description   String?
     department_id String?
-    department    Department? @relation(fields: [department_id], references: [id], onDelete: SetNull)
+    department    Department? @relation(fields: [department_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
     Class         Class[]
     Student       Student[]
 }
@@ -49,15 +51,52 @@ model Class {
     department_id  String?
     specialized_id String?
     schoolyear_id  Int?
-    department     Department?  @relation(fields: [department_id], references: [id], onDelete: SetNull)
-    specialized    Specialized? @relation(fields: [specialized_id], references: [id], onDelete: SetNull)
-    schoolyear     SchoolYear?  @relation(fields: [schoolyear_id], references: [id], onDelete: SetNull)
+    instructorId   String?
+    department     Department?  @relation(fields: [department_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
+    specialized    Specialized? @relation(fields: [specialized_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
+    schoolyear     SchoolYear?  @relation(fields: [schoolyear_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
     Student        Student[]
+    Instructor     Instructor?  @relation(fields: [instructorId], references: [id], onDelete: SetNull, onUpdate: Cascade)
 }
 
 enum Gender {
     MALE
     FEMALE
+}
+
+model Subject {
+    id           String      @id
+    name         String
+    students     Student[]
+    Score        Score[]
+    departmentId String?
+    credit       Int
+    department   Department? @relation(fields: [departmentId], references: [id], onUpdate: Cascade, onDelete: SetNull)
+}
+
+model Score {
+    id        Int      @id @default(autoincrement())
+    CC        Float
+    Midterm   Float?
+    Final     Float?
+    Total     Float?
+    student   Student? @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    studentId String?
+    subject   Subject? @relation(fields: [subjectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    subjectId String?
+}
+
+model Instructor {
+    id           String      @id
+    fullname     String
+    address      String
+    email        String      @unique
+    phone        String
+    level        String
+    departmentId String?
+    department   Department? @relation(fields: [departmentId], references: [id], onUpdate: Cascade, onDelete: SetNull)
+    Class        Class[]
+    image        String?     @db.LongText
 }
 
 model Student {
@@ -66,16 +105,19 @@ model Student {
     address        String
     birth          DateTime
     phone          String
-    schoolyear     SchoolYear?  @relation(fields: [schoolyear_id], references: [id], onDelete: SetNull)
+    schoolyear     SchoolYear?  @relation(fields: [schoolyear_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
     schoolyear_id  Int?
-    department     Department?  @relation(fields: [department_id], references: [id], onDelete: SetNull)
+    department     Department?  @relation(fields: [department_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
     department_id  String?
-    specialized    Specialized? @relation(fields: [specialized_id], references: [id], onDelete: SetNull)
+    specialized    Specialized? @relation(fields: [specialized_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
     specialized_id String?
-    class          Class?       @relation(fields: [class_id], references: [id], onDelete: SetNull)
+    class          Class?       @relation(fields: [class_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
     class_id       Int?
     status         Status       @default(STUDYING)
     gpa            Float
     email          String       @unique
     gender         Gender?
+    Subject        Subject[]
+    Score          Score[]
+    image          String?      @db.LongText
 }

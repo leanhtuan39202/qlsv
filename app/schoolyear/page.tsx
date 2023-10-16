@@ -1,66 +1,57 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { getAllDepartments, deleteDepartment } from "../lib/prisma/department";
-import { Department, Specialized } from "@prisma/client";
+import { SchoolYear } from "@prisma/client";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { AlertTriangle, FileSignature, PlusCircle, Trash2 } from "lucide-react";
-import { deleteSpecialized, getAllSpecialized } from "../lib/prisma/spec";
 import { ColDef } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
+import { deleteSchoolYear, getAllSchoolYear } from "../lib/prisma/schoolyear";
+import { useAppContext } from "../(provider)/appProvider";
 
 function Page() {
-    const [spec, setSpec] = useState<
-        ({
-            department: Department | null;
-        } & Specialized)[]
-    >([]);
-    const [selectedSpecialized, setSelectedSpecialized] = useState<
-        string | null
-    >(null);
+    const [schoolYear, setschoolYear] = useState<SchoolYear[]>([]);
+    const [selectedSchoolYear, setSelectedSchoolYear] = useState<number | null>(
+        null
+    );
+
     useEffect(() => {
         (async () => {
-            const allSpec = await getAllSpecialized();
-            setSpec(allSpec);
+            const allSchoolYear = await getAllSchoolYear();
+            setschoolYear(allSchoolYear);
         })();
     }, []);
 
     const handleDelete = async () => {
-        toast.promise(deleteSpecialized(selectedSpecialized as string), {
+        toast.promise(deleteSchoolYear(selectedSchoolYear as number), {
             loading: "Đang xoá...",
             success: () => {
-                setSpec(spec.filter((d) => d.id !== selectedSpecialized));
-                setSelectedSpecialized(null);
+                setschoolYear(
+                    schoolYear.filter((d) => d.id !== selectedSchoolYear)
+                );
+                setSelectedSchoolYear(null);
                 modalRef.current?.close();
                 return "Xoá thành công";
             },
             error: "Xoá thất bại",
         });
     };
+    const { theme } = useAppContext();
 
     const modalRef = React.useRef<any>(null);
 
     const columnDefs: ColDef[] = [
         {
             field: "id",
-            headerName: "Mã chuyên ngành",
+            headerName: "Mã niên khoá",
             floatingFilter: true,
         },
         {
-            field: "department.name",
-            headerName: "Tên khoa",
-            floatingFilter: true,
-            filter: "set",
-        },
-        {
-            field: "name",
-            headerName: "Tên chuyên ngành",
+            field: "schoolyear",
+            headerName: "Tên niên khoá",
             floatingFilter: true,
         },
-        {
-            field: "description",
-            headerName: "Mô tả",
-        },
+
         {
             field: "id",
             headerName: "Hành dộng",
@@ -70,14 +61,14 @@ function Page() {
                 return (
                     <div className="flex gap-2 items-center h-full">
                         <Link
-                            href={`/spec/edit/${params.value}`}
+                            href={`/schoolyear/edit/${params.value}`}
                             className="btn btn-link btn-xs"
                         >
                             <FileSignature color="hsl(var(--wa))" />
                         </Link>
                         <button
                             onClick={() => {
-                                setSelectedSpecialized(params.value);
+                                setSelectedSchoolYear(params.value);
                                 modalRef?.current?.showModal();
                             }}
                             className="btn btn-link btn-xs"
@@ -92,28 +83,38 @@ function Page() {
     return (
         <div className="min-h-screen w-full p-6">
             <div className="bg-base-100">
-                <Link href={"/spec/add"} className="btn btn-primary">
+                <Link href={"/schoolyear/add"} className="btn btn-primary">
                     <PlusCircle />
                     Thêm mới
                 </Link>
                 <div className="my-8 flex ">
                     <span className="font-bold text-2xl">
-                        Danh sách tất cả các chuyên ngành
+                        Danh sách tất cả các niên khoá
                     </span>
 
                     <div className="ml-auto flex gap-2"></div>
                 </div>
-                <div className="ag-theme-material w-full h-screen">
+                <div
+                    className={`${
+                        theme === "dark"
+                            ? "ag-theme-alpine-dark"
+                            : "ag-theme-material"
+                    }  w-full h-screen`}
+                >
                     <div className="h-2/3">
                         <AgGridReact
                             defaultColDef={{
                                 flex: 1,
                                 sortable: true,
                                 resizable: true,
-                                filter: "text",
+                                filter: true,
+                                filterParams: {
+                                    debounceMs: 0,
+                                },
                             }}
+                            animateRows
                             columnDefs={columnDefs}
-                            rowData={spec}
+                            rowData={schoolYear}
                             pagination
                             paginationPageSize={20}
                         />

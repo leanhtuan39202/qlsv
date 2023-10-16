@@ -33,7 +33,46 @@ CREATE TABLE `Class` (
     `department_id` VARCHAR(191) NULL,
     `specialized_id` VARCHAR(191) NULL,
     `schoolyear_id` INTEGER NULL,
+    `instructorId` VARCHAR(191) NULL,
 
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Subject` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NOT NULL,
+    `instructorId` VARCHAR(191) NULL,
+    `departmentId` VARCHAR(191) NULL,
+    `credit` INTEGER NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Score` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `CC` DOUBLE NOT NULL,
+    `Midterm` DOUBLE NULL,
+    `Final` DOUBLE NULL,
+    `Total` DOUBLE NULL,
+    `studentId` VARCHAR(191) NULL,
+    `subjectId` INTEGER NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Instructor` (
+    `id` VARCHAR(191) NOT NULL,
+    `fullname` VARCHAR(191) NOT NULL,
+    `address` VARCHAR(191) NOT NULL,
+    `email` VARCHAR(191) NOT NULL,
+    `phone` VARCHAR(191) NOT NULL,
+    `level` VARCHAR(191) NOT NULL,
+    `departmentId` VARCHAR(191) NULL,
+
+    UNIQUE INDEX `Instructor_email_key`(`email`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -57,6 +96,15 @@ CREATE TABLE `Student` (
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- CreateTable
+CREATE TABLE `_StudentToSubject` (
+    `A` VARCHAR(191) NOT NULL,
+    `B` INTEGER NOT NULL,
+
+    UNIQUE INDEX `_StudentToSubject_AB_unique`(`A`, `B`),
+    INDEX `_StudentToSubject_B_index`(`B`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- AddForeignKey
 ALTER TABLE `Specialized` ADD CONSTRAINT `Specialized_department_id_fkey` FOREIGN KEY (`department_id`) REFERENCES `Department`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
@@ -70,6 +118,24 @@ ALTER TABLE `Class` ADD CONSTRAINT `Class_specialized_id_fkey` FOREIGN KEY (`spe
 ALTER TABLE `Class` ADD CONSTRAINT `Class_schoolyear_id_fkey` FOREIGN KEY (`schoolyear_id`) REFERENCES `SchoolYear`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `Class` ADD CONSTRAINT `Class_instructorId_fkey` FOREIGN KEY (`instructorId`) REFERENCES `Instructor`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Subject` ADD CONSTRAINT `Subject_instructorId_fkey` FOREIGN KEY (`instructorId`) REFERENCES `Instructor`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Subject` ADD CONSTRAINT `Subject_departmentId_fkey` FOREIGN KEY (`departmentId`) REFERENCES `Department`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Score` ADD CONSTRAINT `Score_studentId_fkey` FOREIGN KEY (`studentId`) REFERENCES `Student`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Score` ADD CONSTRAINT `Score_subjectId_fkey` FOREIGN KEY (`subjectId`) REFERENCES `Subject`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Instructor` ADD CONSTRAINT `Instructor_departmentId_fkey` FOREIGN KEY (`departmentId`) REFERENCES `Department`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `Student` ADD CONSTRAINT `Student_schoolyear_id_fkey` FOREIGN KEY (`schoolyear_id`) REFERENCES `SchoolYear`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -80,3 +146,9 @@ ALTER TABLE `Student` ADD CONSTRAINT `Student_specialized_id_fkey` FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE `Student` ADD CONSTRAINT `Student_class_id_fkey` FOREIGN KEY (`class_id`) REFERENCES `Class`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `_StudentToSubject` ADD CONSTRAINT `_StudentToSubject_A_fkey` FOREIGN KEY (`A`) REFERENCES `Student`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `_StudentToSubject` ADD CONSTRAINT `_StudentToSubject_B_fkey` FOREIGN KEY (`B`) REFERENCES `Subject`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

@@ -5,7 +5,9 @@ import Drawer from "./components/drawer";
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "react-hot-toast";
 import AppProvider from "./(provider)/appProvider";
-
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-material.css";
+import "ag-grid-community/styles/ag-theme-alpine.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {

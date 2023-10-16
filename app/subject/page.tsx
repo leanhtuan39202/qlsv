@@ -1,36 +1,36 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { getAllDepartments, deleteDepartment } from "../lib/prisma/department";
-import { Department, Specialized } from "@prisma/client";
+import { Department, Subject } from "@prisma/client";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { AlertTriangle, FileSignature, PlusCircle, Trash2 } from "lucide-react";
-import { deleteSpecialized, getAllSpecialized } from "../lib/prisma/spec";
-import { ColDef } from "ag-grid-community";
+import { ColDef, ModuleRegistry } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
+import { deleteSubject, getAllSubjects } from "../lib/prisma/subject";
+import { SetFilterModule } from "@ag-grid-enterprise/set-filter";
+import { ExcelExportModule } from "@ag-grid-enterprise/excel-export";
 
+ModuleRegistry.registerModules([SetFilterModule, ExcelExportModule]);
 function Page() {
-    const [spec, setSpec] = useState<
+    const [subject, setSubject] = useState<
         ({
             department: Department | null;
-        } & Specialized)[]
+        } & Subject)[]
     >([]);
-    const [selectedSpecialized, setSelectedSpecialized] = useState<
-        string | null
-    >(null);
+    const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
     useEffect(() => {
         (async () => {
-            const allSpec = await getAllSpecialized();
-            setSpec(allSpec);
+            const allSubject = await getAllSubjects();
+            setSubject(allSubject);
         })();
     }, []);
 
     const handleDelete = async () => {
-        toast.promise(deleteSpecialized(selectedSpecialized as string), {
+        toast.promise(deleteSubject(selectedSubject as string), {
             loading: "Đang xoá...",
             success: () => {
-                setSpec(spec.filter((d) => d.id !== selectedSpecialized));
-                setSelectedSpecialized(null);
+                setSubject(subject.filter((d) => d.id !== selectedSubject));
+                setSelectedSubject(null);
                 modalRef.current?.close();
                 return "Xoá thành công";
             },
@@ -39,45 +39,49 @@ function Page() {
     };
 
     const modalRef = React.useRef<any>(null);
-
-    const columnDefs: ColDef[] = [
+    const gridApiRef = React.useRef<any>(null);
+    const columnDefs: ColDef<any>[] = [
         {
             field: "id",
-            headerName: "Mã chuyên ngành",
+            headerName: "Mã môn học",
             floatingFilter: true,
+            filter: "text",
+        },
+
+        {
+            field: "name",
+            headerName: "Tên môn học",
+            floatingFilter: true,
+            filter: "text",
         },
         {
             field: "department.name",
             headerName: "Tên khoa",
             floatingFilter: true,
-            filter: "set",
         },
         {
-            field: "name",
-            headerName: "Tên chuyên ngành",
-            floatingFilter: true,
-        },
-        {
-            field: "description",
-            headerName: "Mô tả",
+            field: "credit",
+            headerName: "Số tín chỉ",
         },
         {
             field: "id",
             headerName: "Hành dộng",
             floatingFilter: false,
+            filter: false,
+            sortable: false,
 
             cellRenderer: (params: any) => {
                 return (
                     <div className="flex gap-2 items-center h-full">
                         <Link
-                            href={`/spec/edit/${params.value}`}
+                            href={`/subject/edit/${params.value}`}
                             className="btn btn-link btn-xs"
                         >
                             <FileSignature color="hsl(var(--wa))" />
                         </Link>
                         <button
                             onClick={() => {
-                                setSelectedSpecialized(params.value);
+                                setSelectedSubject(params.value);
                                 modalRef?.current?.showModal();
                             }}
                             className="btn btn-link btn-xs"
@@ -92,13 +96,13 @@ function Page() {
     return (
         <div className="min-h-screen w-full p-6">
             <div className="bg-base-100">
-                <Link href={"/spec/add"} className="btn btn-primary">
+                <Link href={"/subject/add"} className="btn btn-primary">
                     <PlusCircle />
                     Thêm mới
                 </Link>
                 <div className="my-8 flex ">
                     <span className="font-bold text-2xl">
-                        Danh sách tất cả các chuyên ngành
+                        Danh sách tất cả các môn học
                     </span>
 
                     <div className="ml-auto flex gap-2"></div>
@@ -110,10 +114,18 @@ function Page() {
                                 flex: 1,
                                 sortable: true,
                                 resizable: true,
-                                filter: "text",
+                                filter: true,
+                                filterParams: {
+                                    debounceMs: 0,
+                                },
                             }}
+                            onGridReady={(gridApi) => {
+                                gridApiRef.current = gridApi.api;
+                            }}
+                            enableAdvancedFilter
+                            animateRows
                             columnDefs={columnDefs}
-                            rowData={spec}
+                            rowData={subject}
                             pagination
                             paginationPageSize={20}
                         />

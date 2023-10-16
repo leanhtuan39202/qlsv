@@ -1,58 +1,98 @@
-import student from "../public/image/sinhvien.png";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import TopStudent from "./components/chart/topStudent";
 import StudentStatus from "./components/chart/studentStatus";
 import GenderChart from "./components/chart/gender";
 import ClassficationChart from "./components/chart/classficationChart";
-export default function Home() {
-    const fakedata = [
+import Link from "next/link";
+import { getAllStudents } from "./lib/prisma/student";
+import { getAllDepartments } from "./lib/prisma/department";
+import { getAllSpecialized } from "./lib/prisma/spec";
+import SinhVienImg from "../public/image/sinhvien.png";
+import IntructorImg from "../public/image/gv.png";
+import DepartmentImg from "../public/image/khoa.png";
+import SpecImg from "../public/image/spec.png";
+import ClassImg from "../public/image/lop.png";
+interface DisplayData {
+    name: string;
+    value: number;
+    image: StaticImageData;
+    href: string;
+}
+export default async function Home() {
+    const [student, department, specialized] = await Promise.all([
+        getAllStudents(),
+        getAllDepartments(),
+        getAllSpecialized(),
+    ]);
+    const displayData: DisplayData[] = [
         {
-            name: "Tổng số sinh viên",
-            value: 100,
-            image: require("../public/image/sinhvien.png"),
+            name: "Tổgng số sinh viên",
+            value: student.length,
+            image: SinhVienImg,
+            href: "/student",
+        },
+        {
+            name: "Tổng số giảng viên",
+            value: 20,
+            image: IntructorImg,
+            href: "/instructor",
         },
         {
             name: "Tổng số khoa",
-            value: 100,
-            image: require("../public/image/khoa.png"),
+            value: department.length,
+            image: DepartmentImg,
+            href: "/department",
+        },
+        {
+            name: "Tổng số chuyên ngành",
+            value: specialized.length,
+            image: SpecImg,
+            href: "/spec",
         },
         {
             name: "Tổng số lớp",
             value: 100,
-            image: require("../public/image/lop.png"),
+            image: ClassImg,
+            href: "/class",
         },
     ];
     return (
         <div className="flex min-h-screen flex-col w-full p-6">
             <h1 className="text-3xl pt-4 font-bold uppercase">Tổng Quan</h1>
-            <div className="flex flex-row gap-8 mt-4 flex-wrap lg:justify-start justify-center">
-                {fakedata.map((item) => (
+            <div className="flex flex-row gap-8 mt-8 flex-wrap lg:justify-start justify-center">
+                {displayData.map((item) => (
                     <div
                         key={item.name}
-                        className="card card-compact w-96 bg-base-200 shadow-xl"
+                        className="card card-compact card-side lg:w-[30%] w-full bg-base-200 shadow-lg "
                     >
                         <figure>
                             <Image
                                 src={item.image}
                                 alt="Shoes"
-                                className="h-52 p-4 object-contain"
+                                className="h-52 p-4 object-contain "
                             />
                         </figure>
                         <div className="card-body">
                             <h2 className="card-title">{item.name}</h2>
                             <p className="font-bold text-5xl">{item.value}</p>
                             <div className="card-actions justify-end">
-                                <button className="btn btn-primary">Xem</button>
+                                <Link
+                                    href={item.href}
+                                    className="btn btn-accent"
+                                >
+                                    Xem
+                                </Link>
                             </div>
                         </div>
                     </div>
                 ))}
             </div>
-            <h1 className="text-3xl pt-8 font-bold uppercase">Thống kê</h1>
-            <div className="flex flex-row gap-8 flex-wrap">
+            <h1 className="text-3xl mt-16 font-bold uppercase">Thống kê</h1>
+            <div className="flex flex-row gap-8 flex-wrap mt-4">
                 <StudentStatus />
                 <GenderChart />
                 <ClassficationChart />
+                <TopStudent />
             </div>
         </div>
     );

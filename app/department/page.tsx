@@ -1,14 +1,22 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { getAllDepartments, deleteDepartment } from "../lib/prisma/department";
 import { Department } from "@prisma/client";
 import toast from "react-hot-toast";
 import Link from "next/link";
-import { AlertTriangle, FileSignature, PlusCircle, Trash2 } from "lucide-react";
+import {
+    AlertTriangle,
+    FileSignature,
+    PlusCircle,
+    Sheet,
+    Trash2,
+} from "lucide-react";
 import { AgGridReact } from "ag-grid-react";
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-alpine.css";
-import { ColDef, GridApi } from "ag-grid-community";
+import { ExcelExportModule } from "@ag-grid-enterprise/excel-export";
+import { ColDef, GridApi, ModuleRegistry } from "ag-grid-community";
+import { AppContext } from "../(provider)/appProvider";
+
+ModuleRegistry.registerModules([ExcelExportModule]);
 
 function Page() {
     const [department, setDepartment] = useState([] as Department[]);
@@ -16,7 +24,6 @@ function Page() {
         null
     );
     useEffect(() => {
-        console.log(1);
         (async () => {
             const allDepartment = await getAllDepartments();
             setDepartment(allDepartment);
@@ -24,8 +31,8 @@ function Page() {
     }, []);
 
     const [columnDefs] = useState<ColDef<Department>[]>([
-        { field: "id", headerName: "Mã khoa", checkboxSelection: true },
-        { field: "name", headerName: "Tên khoa" },
+        { field: "id", headerName: "Mã khoa" },
+        { field: "name", headerName: "Tên khoa", filter: "text" },
         {
             field: "founding",
             headerName: "Ngày thành lập",
@@ -34,25 +41,27 @@ function Page() {
         { field: "description", headerName: "Mô tả", floatingFilter: false },
         {
             field: "id",
-            headerName: "Hành dộng",
+            headerName: "Hành động",
+
             floatingFilter: false,
+
             cellRenderer: (params: any) => {
                 return (
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 h-full items-center">
                         <Link
                             href={`/department/edit/${params.value}`}
-                            className="btn btn-primary btn-xs"
+                            className="btn btn-link btn-xs"
                         >
-                            <FileSignature />
+                            <FileSignature color="hsl(var(--wa))" />
                         </Link>
                         <button
                             onClick={() => {
                                 setSelectedDepartment(params.value);
-                                modalRef?.current?.open();
+                                modalRef?.current?.showModal();
                             }}
-                            className="btn btn-error btn-xs"
+                            className="btn btn-link btn-xs"
                         >
-                            <Trash2 />
+                            <Trash2 color="hsl(var(--er))" />
                         </button>
                     </div>
                 );
@@ -73,8 +82,20 @@ function Page() {
 
     const modalRef = React.useRef<any>(null);
     const exportData = () => {
-        gridApiRef?.current?.exportDataAsCsv();
+        gridApiRef?.current?.exportDataAsExcel({
+            processCellCallback: (params) => {
+                if (params.column.getColDef().headerName == "Hành động") {
+                    params.value = null;
+                }
+                if (params.column.getColId() == "founding") {
+                    params.value = new Date(params.value).toLocaleDateString();
+                }
+                return params.value;
+            },
+        });
     };
+    const { theme } = useContext(AppContext);
+
     return (
         <div className="min-h-screen w-full p-6">
             <div className="bg-base-100">
@@ -88,15 +109,22 @@ function Page() {
                     </span>
                     <div>
                         <button
-                            className="btn btn-success btn-xs"
+                            className="btn-outline btn btn-success"
                             onClick={() => exportData()}
                         >
-                            export
+                            <Sheet size={20} />
+                            Export
                         </button>
                     </div>
                 </div>
 
-                <div className="ag-theme-alpine w-full h-screen">
+                <div
+                    className={`${
+                        theme === "dark"
+                            ? "ag-theme-alpine-dark"
+                            : "ag-theme-material"
+                    }  w-full h-screen`}
+                >
                     <div className="h-2/3">
                         <AgGridReact<Department>
                             onGridReady={(params) => {
@@ -108,12 +136,16 @@ function Page() {
                                 resizable: true,
                                 filter: true,
                                 floatingFilter: true,
+                                filterParams: {
+                                    debounceMs: 0,
+                                },
                             }}
+                            animateRows
                             pagination
                             paginationPageSize={20}
                             rowData={department}
                             columnDefs={columnDefs}
-                        ></AgGridReact>
+                        />
                     </div>
                 </div>
             </div>
