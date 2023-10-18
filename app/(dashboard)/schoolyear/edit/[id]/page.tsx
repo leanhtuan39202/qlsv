@@ -1,8 +1,9 @@
 "use client";
+
 import {
     getSchoolYearById,
     updateSchoolYear,
-} from "@/app/lib/prisma/schoolyear";
+} from "@/app/(dashboard)/lib/prisma/schoolyear";
 import { SchoolYear } from "@prisma/client";
 import { useFormik } from "formik";
 import Link from "next/link";

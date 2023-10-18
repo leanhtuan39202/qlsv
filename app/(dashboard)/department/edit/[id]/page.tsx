@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import {
     updateDepartment,
     getDepartmentById,
-} from "@/app/lib/prisma/department";
+} from "@/app/(dashboard)/lib/prisma/department";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { Department } from "@prisma/client";

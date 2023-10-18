@@ -1,15 +1,16 @@
 "use client";
 import Link from "next/link";
 import React, { useEffect } from "react";
-import {
-    getAllDepartments,
-    getDepartmentById,
-} from "@/app/lib/prisma/department";
+
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { Department, Specialized } from "@prisma/client";
 import toast from "react-hot-toast";
-import { getSpecializedById, updateSpecialized } from "@/app/lib/prisma/spec";
+import {
+    getSpecializedById,
+    updateSpecialized,
+} from "@/app/(dashboard)/lib/prisma/spec";
+import { getAllDepartments } from "@/app/(dashboard)/lib/prisma/department";
 
 interface Props {
     params: {

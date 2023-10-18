@@ -1,11 +1,11 @@
 "use client";
-import { addSchoolYear } from "@/app/lib/prisma/schoolyear";
 import { SchoolYear } from "@prisma/client";
 import { useFormik } from "formik";
 import React from "react";
 import toast from "react-hot-toast";
 import * as Yub from "yup";
 import Link from "next/link";
+import { addSchoolYear } from "../../lib/prisma/schoolyear";
 function page() {
     const validationSchema = Yub.object({
         schoolyear: Yub.string()

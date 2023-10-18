@@ -5,8 +5,8 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { Department, Specialized, Subject } from "@prisma/client";
 import toast from "react-hot-toast";
-import { getAllDepartments } from "@/app/lib/prisma/department";
-import { addSubject } from "@/app/lib/prisma/subject";
+import { addSubject } from "../../lib/prisma/subject";
+import { getAllDepartments } from "../../lib/prisma/department";
 function page() {
     async function add(value: Subject) {
         const { id, name, departmentId, credit } = value;

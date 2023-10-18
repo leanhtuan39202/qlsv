@@ -5,12 +5,11 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { Department, Subject } from "@prisma/client";
 import toast from "react-hot-toast";
-import { getAllDepartments } from "@/app/lib/prisma/department";
 import {
-    addSubject,
     getSubjectById,
     updateSubject,
-} from "@/app/lib/prisma/subject";
+} from "@/app/(dashboard)/lib/prisma/subject";
+import { getAllDepartments } from "@/app/(dashboard)/lib/prisma/department";
 
 interface Props {
     params: {

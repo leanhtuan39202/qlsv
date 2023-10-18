@@ -1,7 +1,7 @@
-import { getInstructorById } from "@/app/lib/prisma/instructor";
 import { Gender } from "@prisma/client";
 import Link from "next/link";
 import React from "react";
+import { getInstructorById } from "../../lib/prisma/instructor";
 
 interface Props {
     params: {

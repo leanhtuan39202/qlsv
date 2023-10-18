@@ -1,12 +1,12 @@
 "use client";
-import { addInstructor } from "@/app/lib/prisma/instructor";
 import { Department, Gender, Instructor } from "@prisma/client";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import toast from "react-hot-toast";
-import { getAllDepartments } from "@/app/lib/prisma/department";
+import { addInstructor } from "../../lib/prisma/instructor";
+import { getAllDepartments } from "../../lib/prisma/department";
 
 function page() {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);

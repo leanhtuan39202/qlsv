@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import React from "react";
-import { addDepartment } from "@/app/lib/prisma/department";
+import { addDepartment } from "@/app/(dashboard)/lib/prisma/department";
 import { redirect } from "next/navigation";
 import * as Yup from "yup";
 import { useFormik } from "formik";

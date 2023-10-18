@@ -5,8 +5,8 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { Department, Specialized } from "@prisma/client";
 import toast from "react-hot-toast";
-import { addSpecialized } from "@/app/lib/prisma/spec";
-import { getAllDepartments } from "@/app/lib/prisma/department";
+import { addSpecialized } from "../../lib/prisma/spec";
+import { getAllDepartments } from "../../lib/prisma/department";
 function page() {
     async function add(value: Specialized) {
         const { id, name, description, department_id } = value;

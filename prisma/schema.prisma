@@ -71,8 +71,7 @@ model Subject {
     departmentId String?
     credit       Int
     department   Department? @relation(fields: [departmentId], references: [id], onUpdate: Cascade, onDelete: SetNull)
-    Student      Student?    @relation(fields: [studentId], references: [id])
-    studentId    String?
+    Student      Student[]
 }
 
 model Score {
