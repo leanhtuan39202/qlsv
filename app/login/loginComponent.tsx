@@ -30,7 +30,7 @@ function LoginComponent() {
                 }, 500);
                 return "Đăng nhập thành công";
             },
-            error: () => {
+            error: (error) => {
                 return "Đăng nhập thất bại, sai tên tài khoản hoặc mật khẩu";
             },
         });

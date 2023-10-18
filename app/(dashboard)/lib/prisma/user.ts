@@ -1,4 +1,4 @@
-'use server'
+'use server';
 import prisma from '.'
 
 const login = async (username: string, password: string) => {
