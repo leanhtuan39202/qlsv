@@ -2,7 +2,7 @@
 import React from "react";
 import Navbar from "../navbar";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 interface Props {
     children: React.ReactNode;

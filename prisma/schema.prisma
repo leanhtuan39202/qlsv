@@ -16,10 +16,10 @@ model Department {
     founding    DateTime
     description String?
     specialized Specialized[]
-    Class       Class[]
-    Student     Student[]
+    classes     Classes[]
     Instructor  Instructor[]
     Subject     Subject[]
+    Student     Student[]
 }
 
 model Specialized {
@@ -28,14 +28,14 @@ model Specialized {
     description   String?
     department_id String?
     department    Department? @relation(fields: [department_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
-    Class         Class[]
+    classes       Classes[]
     Student       Student[]
 }
 
 model SchoolYear {
     id         Int       @id @default(autoincrement())
     schoolyear String
-    Class      Class[]
+    classes    Classes[]
     Student    Student[]
 }
 
@@ -45,7 +45,7 @@ enum Status {
     RESERVE
 }
 
-model Class {
+model Classes {
     id             Int          @id @default(autoincrement())
     name           String
     department_id  String?
@@ -55,8 +55,8 @@ model Class {
     department     Department?  @relation(fields: [department_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
     specialized    Specialized? @relation(fields: [specialized_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
     schoolyear     SchoolYear?  @relation(fields: [schoolyear_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
-    Student        Student[]
     Instructor     Instructor?  @relation(fields: [instructorId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+    Student        Student[]
 }
 
 enum Gender {
@@ -67,11 +67,12 @@ enum Gender {
 model Subject {
     id           String      @id
     name         String
-    students     Student[]
     Score        Score[]
     departmentId String?
     credit       Int
     department   Department? @relation(fields: [departmentId], references: [id], onUpdate: Cascade, onDelete: SetNull)
+    Student      Student?    @relation(fields: [studentId], references: [id])
+    studentId    String?
 }
 
 model Score {
@@ -80,10 +81,10 @@ model Score {
     Midterm   Float?
     Final     Float?
     Total     Float?
-    student   Student? @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     studentId String?
     subject   Subject? @relation(fields: [subjectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     subjectId String?
+    Student   Student? @relation(fields: [studentId], references: [id])
 }
 
 model Instructor {
@@ -95,29 +96,54 @@ model Instructor {
     level        String
     departmentId String?
     department   Department? @relation(fields: [departmentId], references: [id], onUpdate: Cascade, onDelete: SetNull)
-    Class        Class[]
+    classes      Classes[]
     image        String?     @db.LongText
+    gender       Gender
+    birth        DateTime
 }
 
 model Student {
     id             String       @id
     fullname       String
     address        String
-    birth          DateTime
-    phone          String
-    schoolyear     SchoolYear?  @relation(fields: [schoolyear_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
-    schoolyear_id  Int?
     department     Department?  @relation(fields: [department_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
     department_id  String?
+    schoolyear     SchoolYear?  @relation(fields: [schoolyear_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
+    schoolyear_id  Int?
     specialized    Specialized? @relation(fields: [specialized_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
     specialized_id String?
-    class          Class?       @relation(fields: [class_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
+    classes        Classes?     @relation(fields: [class_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
     class_id       Int?
-    status         Status       @default(STUDYING)
-    gpa            Float
-    email          String       @unique
-    gender         Gender?
     Subject        Subject[]
     Score          Score[]
-    image          String?      @db.LongText
+    StudentInfo    StudentInfo?
+}
+
+model User {
+    username String @id
+    password String
+}
+
+model StudentInfo {
+    id                   String   @id
+    birth                DateTime
+    phone                String
+    Student              Student  @relation(fields: [student_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    student_id           String   @unique
+    status               Status   @default(STUDYING)
+    gpa                  Float
+    email                String   @unique
+    gender               Gender?
+    image                String?  @db.LongText
+    nation               String
+    religion             String?  @default("")
+    homeTown             String
+    fatherName           String
+    motherName           String
+    identificationNumber String
+    fatherPhone          String?
+    motherPhone          String?
+    motherWork           String?
+    fatherWork           String?
+    placeOfBirth         String
 }

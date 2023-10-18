@@ -1,6 +1,6 @@
 "use client";
 import React, { useContext } from "react";
-import { AppContext } from "../(provider)/appProvider";
+import { AppContext } from "@/app/(provider)/appProvider";
 import Chart from "react-apexcharts";
 
 function page() {
@@ -14,8 +14,8 @@ function page() {
             value: "acid",
         },
         {
-            name: "Winter",
-            value: "winter",
+            name: "Emerald",
+            value: "emerald",
         },
         {
             name: "Autumn",

@@ -8,6 +8,7 @@ import AppProvider from "./(provider)/appProvider";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-material.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
+import AuthProvider from "./(provider)/authProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -29,9 +30,9 @@ export default function RootLayout({
                     height={5}
                     showSpinner={false}
                 />
-                <AppProvider>
-                    <Drawer>{children}</Drawer>
-                </AppProvider>
+                <AuthProvider>
+                    <AppProvider>{children}</AppProvider>
+                </AuthProvider>
             </body>
         </html>
     );

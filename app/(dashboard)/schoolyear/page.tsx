@@ -7,8 +7,7 @@ import { AlertTriangle, FileSignature, PlusCircle, Trash2 } from "lucide-react";
 import { ColDef } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
 import { deleteSchoolYear, getAllSchoolYear } from "../lib/prisma/schoolyear";
-import { useAppContext } from "../(provider)/appProvider";
-
+import { useAppContext } from "@/app/(provider)/appProvider";
 function Page() {
     const [schoolYear, setschoolYear] = useState<SchoolYear[]>([]);
     const [selectedSchoolYear, setSelectedSchoolYear] = useState<number | null>(

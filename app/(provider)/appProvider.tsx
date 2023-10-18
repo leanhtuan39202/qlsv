@@ -16,7 +16,7 @@ function AppProvider({ children }: IProps) {
     const [loading, setLoading] = useState(false);
     const [theme, setTheme] = useState<string | null>(null);
     const [isFistRender, setIsFistRender] = useState(true);
-    const [chartTheme, setChartTheme] = useState<string>("palette2");
+    const [chartTheme, setChartTheme] = useState<string>("palette1");
     useEffect(() => {
         const currentTheme = localStorage.getItem("theme");
         const currentChartTheme = localStorage.getItem("chartTheme");
@@ -25,12 +25,12 @@ function AppProvider({ children }: IProps) {
             document.documentElement?.setAttribute("data-theme", currentTheme);
         } else {
             setTheme("cupcake");
-            document.documentElement?.setAttribute("data-theme", "cmyk");
+            document.documentElement?.setAttribute("data-theme", "cupcake");
         }
         if (currentChartTheme) {
             setChartTheme(currentChartTheme);
         } else {
-            setChartTheme("palette2");
+            setChartTheme("palette1");
         }
 
         setTimeout(() => setLoading(false), 1500);

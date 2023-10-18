@@ -1,6 +1,6 @@
 "use client";
-import { getAllDepartments } from "@/app/lib/prisma/department";
-import { getAllStudents } from "@/app/lib/prisma/student";
+import { getAllDepartments } from "@/app/(dashboard)/lib/prisma/department";
+import { getAllStudents } from "@/app/(dashboard)/lib/prisma/student";
 import { Department, Student } from "@prisma/client";
 import React, { useEffect, useState } from "react";
 

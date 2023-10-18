@@ -14,7 +14,7 @@ import {
 import { AgGridReact } from "ag-grid-react";
 import { ExcelExportModule } from "@ag-grid-enterprise/excel-export";
 import { ColDef, GridApi, ModuleRegistry } from "ag-grid-community";
-import { AppContext } from "../(provider)/appProvider";
+import { AppContext } from "@/app/(provider)/appProvider";
 
 ModuleRegistry.registerModules([ExcelExportModule]);
 

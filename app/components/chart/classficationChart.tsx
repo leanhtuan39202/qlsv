@@ -1,6 +1,6 @@
 "use client";
 import { AppContext } from "@/app/(provider)/appProvider";
-import { getAllStudents } from "@/app/lib/prisma/student";
+import { getAllStudents } from "@/app/(dashboard)/lib/prisma/student";
 import { Student } from "@prisma/client";
 import React, { useEffect, useState, useContext } from "react";
 import Chart from "react-apexcharts";

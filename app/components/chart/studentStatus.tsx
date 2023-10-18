@@ -1,11 +1,11 @@
 "use client";
 import { AppContext } from "@/app/(provider)/appProvider";
-import { getAllStudents } from "@/app/lib/prisma/student";
-import { Student, Status } from "@prisma/client";
+import { getAllStudents } from "@/app/(dashboard)/lib/prisma/student";
+import { StudentInfo, Status } from "@prisma/client";
 import React, { useContext, useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 function StudentStatus() {
-    const [student, setStudent] = useState<Student[]>([] as Student[]);
+    const [student, setStudent] = useState<StudentInfo[]>([] as StudentInfo[]);
     const [chartData, setChartData] = useState<number[]>([]);
     const { chartTheme } = useContext(AppContext);
     useEffect(() => {

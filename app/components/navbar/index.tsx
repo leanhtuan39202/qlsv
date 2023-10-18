@@ -1,5 +1,7 @@
+"use client";
 import Link from "next/link";
 import React from "react";
+import { signOut } from "next-auth/react";
 
 function Navbar() {
     return (
@@ -55,7 +57,7 @@ function Navbar() {
                         <li>
                             <Link href={"/setting"}>Settings</Link>
                         </li>
-                        <li>
+                        <li onClick={() => signOut()}>
                             <a>Logout</a>
                         </li>
                     </ul>

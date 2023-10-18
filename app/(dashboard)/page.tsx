@@ -1,23 +1,25 @@
 import Image, { StaticImageData } from "next/image";
-import TopStudent from "./components/chart/topStudent";
-import StudentStatus from "./components/chart/studentStatus";
-import GenderChart from "./components/chart/gender";
-import ClassficationChart from "./components/chart/classficationChart";
+import TopStudent from "../components/chart/topStudent";
+import StudentStatus from "../components/chart/studentStatus";
+import GenderChart from "../components/chart/gender";
+import ClassficationChart from "../components/chart/classficationChart";
 import Link from "next/link";
-import { getAllStudents } from "./lib/prisma/student";
-import { getAllDepartments } from "./lib/prisma/department";
-import { getAllSpecialized } from "./lib/prisma/spec";
-import SinhVienImg from "../public/image/sinhvien.png";
-import IntructorImg from "../public/image/gv.png";
-import DepartmentImg from "../public/image/khoa.png";
-import SpecImg from "../public/image/spec.png";
-import ClassImg from "../public/image/lop.png";
+import { getAllStudents } from "../(dashboard)/lib/prisma/student";
+import { getAllDepartments } from "../(dashboard)/lib/prisma/department";
+import { getAllSpecialized } from "../(dashboard)/lib/prisma/spec";
+import SinhVienImg from "../../public/image/sinhvien.png";
+import IntructorImg from "../../public/image/gv.png";
+import DepartmentImg from "../../public/image/khoa.png";
+import SpecImg from "../../public/image/spec.png";
+import ClassImg from "../../public/image/lop.png";
+
 interface DisplayData {
     name: string;
     value: number;
     image: StaticImageData;
     href: string;
 }
+
 export default async function Home() {
     const [student, department, specialized] = await Promise.all([
         getAllStudents(),
