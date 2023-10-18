@@ -8,7 +8,7 @@ interface Props {
         id: string;
     };
 }
-async function page({ params }: Props) {
+async function Page({ params }: Props) {
     const { id } = params;
 
     const instructorInfo = await getInstructorById(id);
@@ -153,4 +153,4 @@ async function page({ params }: Props) {
     );
 }
 
-export default page;
+export default Page;

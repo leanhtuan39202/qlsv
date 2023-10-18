@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import * as Yub from "yup";
 import Link from "next/link";
 import { addSchoolYear } from "../../lib/prisma/schoolyear";
-function page() {
+function Page() {
     const validationSchema = Yub.object({
         schoolyear: Yub.string()
             .required("Vui lòng nhập niên khoá")
@@ -88,4 +88,4 @@ function page() {
     );
 }
 
-export default page;
+export default Page;

@@ -15,7 +15,7 @@ interface Props {
         id: string;
     };
 }
-function page({ params }: Props) {
+function Page({ params }: Props) {
     const [currentSchoolYear, setcurrentSchoolYear] =
         React.useState<SchoolYear | null>({} as SchoolYear);
     const { id } = params;
@@ -104,4 +104,4 @@ function page({ params }: Props) {
     );
 }
 
-export default page;
+export default Page;

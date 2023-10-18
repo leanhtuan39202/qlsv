@@ -16,7 +16,7 @@ interface Props {
         id: string;
     };
 }
-function page({ params }: Props) {
+function Page({ params }: Props) {
     async function add(value: Department) {
         const { id, name, founding, description } = value;
         await updateDepartment({
@@ -175,4 +175,4 @@ function page({ params }: Props) {
     );
 }
 
-export default page;
+export default Page;

@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { addInstructor } from "../../lib/prisma/instructor";
 import { getAllDepartments } from "../../lib/prisma/department";
 
-function page() {
+function Page() {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [department, setDepartment] = useState<Department[]>([]);
     const chooseImg = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -271,4 +271,4 @@ function page() {
     );
 }
 
-export default page;
+export default Page;

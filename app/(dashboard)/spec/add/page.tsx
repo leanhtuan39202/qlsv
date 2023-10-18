@@ -7,7 +7,7 @@ import { Department, Specialized } from "@prisma/client";
 import toast from "react-hot-toast";
 import { addSpecialized } from "../../lib/prisma/spec";
 import { getAllDepartments } from "../../lib/prisma/department";
-function page() {
+function Page() {
     async function add(value: Specialized) {
         const { id, name, description, department_id } = value;
         await addSpecialized({
@@ -178,4 +178,4 @@ function page() {
     );
 }
 
-export default page;
+export default Page;

@@ -2,12 +2,11 @@
 import Link from "next/link";
 import React from "react";
 import { addDepartment } from "@/app/(dashboard)/lib/prisma/department";
-import { redirect } from "next/navigation";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { Department } from "@prisma/client";
 import toast from "react-hot-toast";
-function page() {
+function Page() {
     async function add(value: Department) {
         const { id, name, founding, description } = value;
         await addDepartment({
@@ -146,4 +145,4 @@ function page() {
     );
 }
 
-export default page;
+export default Page;

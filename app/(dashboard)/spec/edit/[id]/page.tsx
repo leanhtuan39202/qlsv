@@ -17,7 +17,7 @@ interface Props {
         id: string;
     };
 }
-function page({ params }: Props) {
+function Page({ params }: Props) {
     async function add(value: Specialized) {
         const { id, name, department_id, description } = value;
         await updateSpecialized({
@@ -203,4 +203,4 @@ function page({ params }: Props) {
     );
 }
 
-export default page;
+export default Page;

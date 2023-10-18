@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import { AppContext } from "@/app/(provider)/appProvider";
 import Chart from "react-apexcharts";
 
-function page() {
+function Page() {
     const themeList = [
         {
             name: "Garden",
@@ -181,4 +181,4 @@ function page() {
     );
 }
 
-export default page;
+export default Page;

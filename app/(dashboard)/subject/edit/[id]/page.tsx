@@ -16,7 +16,7 @@ interface Props {
         id: string;
     };
 }
-function page({ params }: Props) {
+function Page({ params }: Props) {
     const { id } = params;
     async function update(value: Subject) {
         const { id, name, departmentId, credit } = value;
@@ -206,4 +206,4 @@ function page({ params }: Props) {
     );
 }
 
-export default page;
+export default Page;

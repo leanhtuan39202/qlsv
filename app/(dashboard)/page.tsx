@@ -1,8 +1,8 @@
 import Image, { StaticImageData } from "next/image";
-import TopStudent from "../components/chart/topStudent";
-import StudentStatus from "../components/chart/studentStatus";
-import GenderChart from "../components/chart/gender";
-import ClassficationChart from "../components/chart/classficationChart";
+// import TopStudent from "../components/chart/topStudent";
+// import StudentStatus from "../components/chart/studentStatus";
+// import GenderChart from "../components/chart/gender";
+// import ClassficationChart from "../components/chart/classficationChart";
 import Link from "next/link";
 import { getAllStudents } from "../(dashboard)/lib/prisma/student";
 import { getAllDepartments } from "../(dashboard)/lib/prisma/department";
@@ -94,10 +94,10 @@ export default async function Home() {
             </div>
             <h1 className="text-3xl mt-16 font-bold uppercase">Thống kê</h1>
             <div className="flex flex-row gap-8 flex-wrap mt-4">
-                <StudentStatus />
+                {/* <StudentStatus />
                 <GenderChart />
                 <ClassficationChart />
-                <TopStudent />
+                <TopStudent /> */}
             </div>
         </div>
     );
