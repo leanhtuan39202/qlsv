@@ -12,7 +12,8 @@ import IntructorImg from "../../public/image/gv.png";
 import DepartmentImg from "../../public/image/khoa.png";
 import SpecImg from "../../public/image/spec.png";
 import ClassImg from "../../public/image/lop.png";
-
+import { authOption } from "../api/auth/[...nextauth]/option";
+import { getServerSession } from "next-auth";
 interface DisplayData {
     name: string;
     value: number;
@@ -21,6 +22,7 @@ interface DisplayData {
 }
 
 export default async function Home() {
+    const session: any = await getServerSession(authOption as any);
     const [student, department, specialized] = await Promise.all([
         getAllStudents(),
         getAllDepartments(),
@@ -61,6 +63,7 @@ export default async function Home() {
     return (
         <div className="flex min-h-screen flex-col w-full p-6">
             <h1 className="text-3xl pt-4 font-bold uppercase">Tổng Quan</h1>
+            {JSON.stringify(session)}
             <div className="flex flex-row gap-8 mt-8 flex-wrap lg:justify-start justify-center">
                 {displayData.map((item) => (
                     <div

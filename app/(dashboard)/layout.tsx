@@ -8,7 +8,7 @@ interface Props {
     children: React.ReactNode;
 }
 async function Layout({ children }: Props) {
-    const session = await getServerSession(authOption);
+    const session = await getServerSession(authOption as any);
 
     if (!session) {
         return redirect("/login");
