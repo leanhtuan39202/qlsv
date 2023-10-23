@@ -30,7 +30,7 @@ function LoginComponent() {
                 }, 500);
                 return "Đăng nhập thành công";
             },
-            error: (error) => {
+            error: () => {
                 return "Đăng nhập thất bại, sai tên tài khoản hoặc mật khẩu";
             },
         });
@@ -42,7 +42,7 @@ function LoginComponent() {
         >
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                 <Image className="mx-auto h-32 w-auto" src={Logo} alt="logo" />
-                <h2 className="mt-10 text-center text-3xl font-bold leading-9 tracking-tight ">
+                <h2 className="mt-10 text-center text-4xl font-bold leading-9 tracking-tight ">
                     Hệ thống quản lý sinh viên
                 </h2>
             </div>
@@ -63,7 +63,7 @@ function LoginComponent() {
                                 name="username"
                                 type="text"
                                 autoComplete="email"
-                                className="input input-bordered w-full"
+                                className="input input-bordered w-full input-lg"
                             />
                         </div>
                     </div>
@@ -72,7 +72,7 @@ function LoginComponent() {
                         <div className="flex items-center justify-between">
                             <label
                                 htmlFor="password"
-                                className="block text-sm font-medium leading-6 "
+                                className="block text-sm font-medium leading-6"
                             >
                                 Mật khẩu
                             </label>
@@ -84,14 +84,14 @@ function LoginComponent() {
                                 name="password"
                                 type="password"
                                 autoComplete="current-password"
-                                className="input input-bordered w-full"
+                                className="input input-bordered w-full input-lg"
                             />
                         </div>
                     </div>
                     <div>
                         <button
                             onClick={handleLogin}
-                            className="btn btn-primary btn-block"
+                            className="btn btn-primary btn-block btn-lg"
                         >
                             Đăng nhập
                         </button>

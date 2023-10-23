@@ -38,7 +38,7 @@ const menu = [
     },
     {
         label: "Quản lý lớp",
-        href: "/class",
+        href: "/classes",
     },
     {
         label: "Quản lý niên khoá",
@@ -75,7 +75,7 @@ const Drawer: React.FC<Props> = ({ children }) => {
                             src={require("../../../public/image/vnualogo.png")}
                         />
                         <div className="ml-4">
-                            <span className="text-primary">Quản lý</span>{" "}
+                            <span className="text-secondary">Quản lý</span>{" "}
                             <span className="text-base-content">sinh viên</span>
                         </div>
                     </Link>

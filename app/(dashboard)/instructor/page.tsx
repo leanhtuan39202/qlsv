@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { getAllDepartments, deleteDepartment } from "../lib/prisma/department";
-import { Department, Instructor, Specialized } from "@prisma/client";
+import { Department, Instructor } from "@prisma/client";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import {
@@ -11,21 +10,21 @@ import {
     PlusCircle,
     Trash2,
 } from "lucide-react";
-import { deleteSpecialized, getAllSpecialized } from "../lib/prisma/spec";
 import { ColDef } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
-import { getAllIntructor } from "../lib/prisma/instructor";
+import { deleteInstructor, getAllIntructor } from "../lib/prisma/instructor";
 import { useAppContext } from "@/app/(provider)/appProvider";
 
+type instructorMixed = ({
+    department: Department | null;
+} & Instructor)[];
+
 function Page() {
-    const [instructor, setIntructor] = useState<
-        ({
-            department: Department | null;
-        } & Instructor)[]
-    >([]);
+    const [instructor, setIntructor] = useState<instructorMixed>([]);
     const [selectedInstructor, setSelectedInstructor] = useState<string | null>(
         null
     );
+
     useEffect(() => {
         (async () => {
             const allIntructor = await getAllIntructor();
@@ -34,7 +33,7 @@ function Page() {
     }, []);
 
     const handleDelete = async () => {
-        toast.promise(deleteSpecialized(selectedInstructor as string), {
+        toast.promise(deleteInstructor(selectedInstructor as string), {
             loading: "Đang xoá...",
             success: () => {
                 setIntructor(
@@ -57,6 +56,20 @@ function Page() {
             floatingFilter: true,
         },
         {
+            field: "image",
+            headerName: "Ảnh",
+            floatingFilter: false,
+            cellRenderer: (params: any) => {
+                return (
+                    <img
+                        src={params.value}
+                        alt="avatar"
+                        className="w-24 h-24 object-cover"
+                    />
+                );
+            },
+        },
+        {
             field: "fullname",
             headerName: "Tên giảng viên",
             floatingFilter: true,
@@ -69,6 +82,7 @@ function Page() {
         {
             field: "phone",
             headerName: "Số điện thoại",
+            floatingFilter: true,
         },
         {
             field: "id",
@@ -121,7 +135,7 @@ function Page() {
                 </div>
                 <div
                     className={`${
-                        theme === "dark"
+                        theme === "dark" || theme === "blackpink"
                             ? "ag-theme-alpine-dark"
                             : "ag-theme-material"
                     } w-full h-screen`}
@@ -137,7 +151,11 @@ function Page() {
                             columnDefs={columnDefs}
                             rowData={instructor}
                             pagination
+                            animateRows
                             paginationPageSize={20}
+                            gridOptions={{
+                                rowHeight: 100,
+                            }}
                         />
                     </div>
                 </div>

@@ -1,8 +1,8 @@
 import Image, { StaticImageData } from "next/image";
-// import TopStudent from "../components/chart/topStudent";
-// import StudentStatus from "../components/chart/studentStatus";
-// import GenderChart from "../components/chart/gender";
-// import ClassficationChart from "../components/chart/classficationChart";
+import TopStudent from "../components/chart/topStudent";
+import StudentStatus from "../components/chart/studentStatus";
+import GenderChart from "../components/chart/gender";
+import ClassficationChart from "../components/chart/classficationChart";
 import Link from "next/link";
 import { getAllStudents } from "../(dashboard)/lib/prisma/student";
 import { getAllDepartments } from "../(dashboard)/lib/prisma/department";
@@ -12,8 +12,10 @@ import IntructorImg from "../../public/image/gv.png";
 import DepartmentImg from "../../public/image/khoa.png";
 import SpecImg from "../../public/image/spec.png";
 import ClassImg from "../../public/image/lop.png";
-import { authOption } from "../api/auth/[...nextauth]/option";
-import { getServerSession } from "next-auth";
+import SchoolYearImg from "../../public/image/nk.png";
+import { getAllIntructor } from "./lib/prisma/instructor";
+import { getAllClasses } from "./lib/prisma/classes";
+import { getAllSchoolYear } from "./lib/prisma/schoolyear";
 interface DisplayData {
     name: string;
     value: number;
@@ -22,22 +24,25 @@ interface DisplayData {
 }
 
 export default async function Home() {
-    const session: any = await getServerSession(authOption as any);
-    const [student, department, specialized] = await Promise.all([
-        getAllStudents(),
-        getAllDepartments(),
-        getAllSpecialized(),
-    ]);
+    const [student, department, specialized, instructor, classes, schoolYear] =
+        await Promise.all([
+            getAllStudents(),
+            getAllDepartments(),
+            getAllSpecialized(),
+            getAllIntructor(),
+            getAllClasses(),
+            getAllSchoolYear(),
+        ]);
     const displayData: DisplayData[] = [
         {
-            name: "Tổgng số sinh viên",
+            name: "Tổng số sinh viên",
             value: student.length,
             image: SinhVienImg,
             href: "/student",
         },
         {
             name: "Tổng số giảng viên",
-            value: 20,
+            value: instructor.length,
             image: IntructorImg,
             href: "/instructor",
         },
@@ -54,16 +59,21 @@ export default async function Home() {
             href: "/spec",
         },
         {
-            name: "Tổng số lớp",
-            value: 100,
+            name: "Tổng số lớp học",
+            value: classes.length,
             image: ClassImg,
-            href: "/class",
+            href: "/classes",
+        },
+        {
+            name: "Tổng số niên khoá",
+            value: schoolYear.length,
+            image: SchoolYearImg,
+            href: "/schoolyear",
         },
     ];
     return (
         <div className="flex min-h-screen flex-col w-full p-6">
             <h1 className="text-3xl pt-4 font-bold uppercase">Tổng Quan</h1>
-            {JSON.stringify(session)}
             <div className="flex flex-row gap-8 mt-8 flex-wrap lg:justify-start justify-center">
                 {displayData.map((item) => (
                     <div
@@ -74,7 +84,7 @@ export default async function Home() {
                             <Image
                                 src={item.image}
                                 alt="Shoes"
-                                className="h-52 p-4 object-contain "
+                                className="h-44 p-4 object-contain "
                             />
                         </figure>
                         <div className="card-body">
@@ -94,10 +104,10 @@ export default async function Home() {
             </div>
             <h1 className="text-3xl mt-16 font-bold uppercase">Thống kê</h1>
             <div className="flex flex-row gap-8 flex-wrap mt-4">
-                {/* <StudentStatus />
+                <StudentStatus />
                 <GenderChart />
                 <ClassficationChart />
-                <TopStudent /> */}
+                <TopStudent />
             </div>
         </div>
     );

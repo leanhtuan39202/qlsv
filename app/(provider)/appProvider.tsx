@@ -14,9 +14,13 @@ interface IProps {
 export const AppContext = createContext<IAppContext>({} as IAppContext);
 function AppProvider({ children }: IProps) {
     const [loading, setLoading] = useState(false);
+
     const [theme, setTheme] = useState<string | null>(null);
+
     const [isFistRender, setIsFistRender] = useState(true);
+
     const [chartTheme, setChartTheme] = useState<string>("palette1");
+
     useEffect(() => {
         const currentTheme = localStorage.getItem("theme");
         const currentChartTheme = localStorage.getItem("chartTheme");

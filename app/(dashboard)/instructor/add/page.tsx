@@ -54,7 +54,6 @@ function Page() {
         },
         validationSchema: formikSchema,
         onSubmit: (value: Instructor) => {
-            console.log(value);
             toast.promise(
                 addInstructor({
                     ...value,

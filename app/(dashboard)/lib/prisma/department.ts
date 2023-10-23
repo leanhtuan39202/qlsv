@@ -1,25 +1,27 @@
 "use server";
 import { Department } from "@prisma/client";
 import prisma from ".";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
-const getAllDepartments = async (input?: string) => {
-    if (!input) {
-        const departments = await prisma.department.findMany();
-        return departments;
-    } else {
-        const departments = await prisma.department.findMany({
-            where: {
-                name: {
-                    contains: input,
-                },
 
-            },
-        });
-        return departments;
-    }
+const getAllDepartments = async () => {
 
+    const departments = await prisma.department.findMany();
+    return departments;
+
+}
+const getAllDepartmentsWithFullInfo = async (id: string) => {
+    const departments = await prisma.department.findUnique({
+        include: {
+            classes: true,
+            Student: true,
+            specialized: true,
+            Instructor: true
+        },
+        where: {
+            id
+        },
+    });
+    return departments
 }
 const getDepartmentById = async (id: string) => {
     const department = await prisma.department.findUnique({
@@ -51,4 +53,4 @@ const updateDepartment = async (department: Department) => {
 
 }
 
-export { addDepartment, getAllDepartments, deleteDepartment, updateDepartment, getDepartmentById }
+export { addDepartment, getAllDepartments, deleteDepartment, updateDepartment, getDepartmentById, getAllDepartmentsWithFullInfo };

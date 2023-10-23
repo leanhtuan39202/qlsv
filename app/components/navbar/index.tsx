@@ -49,16 +49,16 @@ function Navbar() {
                         className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
                     >
                         <li>
-                            <a className="justify-between">
+                            <Link href={"/"} className="justify-between">
                                 Profile
                                 <span className="badge">New</span>
-                            </a>
+                            </Link>
                         </li>
                         <li>
                             <Link href={"/setting"}>Settings</Link>
                         </li>
                         <li onClick={() => signOut()}>
-                            <a>Logout</a>
+                            <span>Logout</span>
                         </li>
                     </ul>
                 </div>

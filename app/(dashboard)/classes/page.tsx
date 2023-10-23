@@ -1,7 +1,12 @@
 "use client";
 import React, { useState, useEffect, useContext } from "react";
-import { getAllDepartments, deleteDepartment } from "../lib/prisma/department";
-import { Department } from "@prisma/client";
+import {
+    Classes,
+    Department,
+    Instructor,
+    SchoolYear,
+    Student,
+} from "@prisma/client";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import {
@@ -16,54 +21,96 @@ import { AgGridReact } from "ag-grid-react";
 import { ExcelExportModule } from "@ag-grid-enterprise/excel-export";
 import { ColDef, GridApi, ModuleRegistry } from "ag-grid-community";
 import { AppContext } from "@/app/(provider)/appProvider";
+import { deleteClass, getAllClasses } from "../lib/prisma/classes";
+import { SetFilterModule } from "ag-grid-enterprise";
 
-ModuleRegistry.registerModules([ExcelExportModule]);
+ModuleRegistry.registerModules([ExcelExportModule, SetFilterModule]);
 
+type classesMixed = ({
+    department: Department | null;
+    Student: Student[];
+    Instructor: Instructor;
+    schoolyear: SchoolYear;
+} & Classes)[];
 function Page() {
-    const [department, setDepartment] = useState([] as Department[]);
-    const [selectedDepartment, setSelectedDepartment] = useState<string | null>(
-        null
-    );
+    const [classes, setClasses] = useState<classesMixed>([]);
+    const [selectedClass, setSelectedClass] = useState<string | null>(null);
     useEffect(() => {
         (async () => {
-            const allDepartment = await getAllDepartments();
-            setDepartment(allDepartment);
+            const allClasses = await getAllClasses();
+            setClasses(allClasses as classesMixed);
         })();
     }, []);
 
-    const [columnDefs] = useState<ColDef<Department>[]>([
-        { field: "id", headerName: "Mã khoa" },
-        { field: "name", headerName: "Tên khoa", filter: "text" },
+    const [columnDefs] = useState<ColDef<any>[]>([
+        { field: "id", headerName: "Mã lớp", flex: 1 },
         {
-            field: "founding",
-            headerName: "Ngày thành lập",
+            field: "name",
+            headerName: "Tên lớp",
             floatingFilter: false,
+            filter: "text",
+            flex: 1,
         },
-        { field: "description", headerName: "Mô tả", floatingFilter: false },
+        {
+            field: "department.name",
+            headerName: "Tên khoa",
+            filter: "text",
+            flex: 1,
+        },
+        {
+            field: "id",
+            headerName: "Thông tin",
+            floatingFilter: false,
+            minWidth: 400,
+            flex: 0,
+            suppressSizeToFit: true,
+            cellRenderer: (params: any) => {
+                return (
+                    <div className="flex flex-col">
+                        <span>Sĩ số: {params.data.Student.length}</span>
+                        <span>
+                            Niên khoá: {params.data.schoolyear.schoolyear}
+                        </span>
+                        {params?.data.Instructor?.id && (
+                            <span>
+                                Giáo viên chủ nhiệm:{" "}
+                                <Link
+                                    className="btn btn-link btn-xs"
+                                    href={
+                                        "/instructor/" +
+                                        params.data.Instructor.id
+                                    }
+                                >
+                                    {params.data.Instructor.fullname}
+                                </Link>
+                            </span>
+                        )}
+                    </div>
+                );
+            },
+        },
         {
             field: "id",
             headerName: "Hành động",
-
             floatingFilter: false,
-
             cellRenderer: (params: any) => {
                 return (
                     <div className="flex gap-2 h-full items-center">
                         <Link
-                            href={`/department/${params.value}`}
+                            href={`/classes/${params.value}`}
                             className="btn btn-link btn-xs"
                         >
                             <Eye color="hsl(var(--su))" />
                         </Link>
                         <Link
-                            href={`/department/edit/${params.value}`}
+                            href={`/classes/edit/${params.value}`}
                             className="btn btn-link btn-xs"
                         >
                             <FileSignature color="hsl(var(--wa))" />
                         </Link>
                         <button
                             onClick={() => {
-                                setSelectedDepartment(params.value);
+                                setSelectedClass(params.value);
                                 modalRef?.current?.showModal();
                             }}
                             className="btn btn-link btn-xs"
@@ -76,13 +123,13 @@ function Page() {
         },
     ]);
     const handleDelete = async () => {
-        toast.promise(deleteDepartment(selectedDepartment as string), {
+        toast.promise(deleteClass(selectedClass as string), {
             loading: "Đang xoá...",
             success: "Xoá thành công",
             error: "Xoá thất bại",
         });
-        setDepartment(department.filter((d) => d.id !== selectedDepartment));
-        setSelectedDepartment(null);
+        setClasses(classes.filter((c) => c.id !== selectedClass));
+        setSelectedClass(null);
         modalRef.current?.close();
     };
     const gridApiRef = React.useRef<GridApi<Department>>();
@@ -106,18 +153,18 @@ function Page() {
     return (
         <div className="min-h-screen w-full p-6">
             <div className="bg-base-100">
-                <Link href={"/department/add"} className="btn btn-primary">
+                <Link href={"/classes/add"} className="btn btn-primary">
                     <PlusCircle />
                     Thêm mới
                 </Link>
                 <div className="my-8 flex justify-between">
                     <span className="font-bold text-2xl">
-                        Danh sách tất cả các khoa
+                        Danh sách tất cả các lớp học
                     </span>
                     <div>
                         <button
                             className="btn-outline btn btn-success"
-                            onClick={() => exportData()}
+                            onClick={exportData}
                         >
                             <Sheet size={20} />
                             Export
@@ -133,12 +180,11 @@ function Page() {
                     }  w-full h-screen`}
                 >
                     <div className="h-2/3">
-                        <AgGridReact<Department>
+                        <AgGridReact<any>
                             onGridReady={(params) => {
                                 gridApiRef.current = params.api;
                             }}
                             defaultColDef={{
-                                flex: 1,
                                 sortable: true,
                                 resizable: true,
                                 filter: true,
@@ -148,9 +194,12 @@ function Page() {
                                 },
                             }}
                             animateRows
+                            gridOptions={{
+                                rowHeight: 150,
+                            }}
                             pagination
                             paginationPageSize={20}
-                            rowData={department}
+                            rowData={classes}
                             columnDefs={columnDefs}
                         />
                     </div>

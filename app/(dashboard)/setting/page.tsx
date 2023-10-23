@@ -6,7 +6,7 @@ import Chart from "react-apexcharts";
 function Page() {
     const themeList = [
         {
-            name: "Garden",
+            name: "Khu vườn",
             value: "garden",
         },
         {
@@ -14,11 +14,15 @@ function Page() {
             value: "acid",
         },
         {
-            name: "Emerald",
-            value: "emerald",
+            name: "Mùa đông",
+            value: "winter",
         },
         {
-            name: "Autumn",
+            name: "Black Pink",
+            value: "blackpink",
+        },
+        {
+            name: "Mùa thu",
             value: "autumn",
         },
         {
@@ -26,11 +30,11 @@ function Page() {
             value: "bumblebee",
         },
         {
-            name: "Cupcake",
+            name: "Bánh ngọt",
             value: "cupcake",
         },
         {
-            name: "Dark",
+            name: "Tối",
             value: "dark",
         },
     ];

@@ -9,4 +9,8 @@
 }
 .ag-theme-material {
     --ag-material-primary-color: hsl(var(--p)) !important;
+    --ag-font-size: 17px !important;
+}
+.ag-theme-alpine-dark {
+    --ag-font-size: 17px !important;
 }

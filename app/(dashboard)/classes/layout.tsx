@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 
-function SpecializedLayout({ children }: { children: React.ReactNode }) {
+function DepartmentLayout({ children }: { children: React.ReactNode }) {
     return (
         <div className="w-full min-h-screen flex flex-col p-4">
             <div className="text-md breadcrumbs">
@@ -10,7 +10,7 @@ function SpecializedLayout({ children }: { children: React.ReactNode }) {
                         <Link href={"/"}>Trang chủ</Link>
                     </li>
                     <li>
-                        <Link href={"/instructor/"}>Giảng viên</Link>
+                        <Link href={"/classes/"}>Lớp học</Link>
                     </li>
                 </ul>
             </div>
@@ -19,4 +19,4 @@ function SpecializedLayout({ children }: { children: React.ReactNode }) {
     );
 }
 
-export default SpecializedLayout;
+export default DepartmentLayout;

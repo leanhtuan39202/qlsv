@@ -46,17 +46,17 @@ enum Status {
 }
 
 model Classes {
-    id             Int          @id @default(autoincrement())
+    id             String       @id
     name           String
     department_id  String?
     specialized_id String?
     schoolyear_id  Int?
-    instructorId   String?
+    instructorId   String?      @unique
     department     Department?  @relation(fields: [department_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
     specialized    Specialized? @relation(fields: [specialized_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
     schoolyear     SchoolYear?  @relation(fields: [schoolyear_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
-    Instructor     Instructor?  @relation(fields: [instructorId], references: [id], onDelete: SetNull, onUpdate: Cascade)
     Student        Student[]
+    Instructor     Instructor?  @relation(fields: [instructorId], references: [id])
 }
 
 enum Gender {
@@ -95,10 +95,10 @@ model Instructor {
     level        String
     departmentId String?
     department   Department? @relation(fields: [departmentId], references: [id], onUpdate: Cascade, onDelete: SetNull)
-    classes      Classes[]
     image        String?     @db.LongText
     gender       Gender
     birth        DateTime
+    Classes      Classes?
 }
 
 model Student {
@@ -112,7 +112,7 @@ model Student {
     specialized    Specialized? @relation(fields: [specialized_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
     specialized_id String?
     classes        Classes?     @relation(fields: [class_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
-    class_id       Int?
+    class_id       String?
     Subject        Subject[]
     Score          Score[]
     StudentInfo    StudentInfo?

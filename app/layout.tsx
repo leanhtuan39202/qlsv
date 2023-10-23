@@ -14,12 +14,6 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
     title: "Quản lí sinh viên",
     description: "vnua",
-    icons: [
-        {
-            rel: "icon",
-            url: "../public/image/vnualogo.png",
-        },
-    ],
 };
 
 export default function RootLayout({
@@ -29,6 +23,11 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en" data-theme="cupcake">
+            <meta name="theme-color" content="hsl(var(--p))" />
+            <meta
+                name="viewport"
+                content="width=device-width, initial-scale=1.0"
+            />
             <body className={inter.className}>
                 <Toaster />
                 <NextTopLoader

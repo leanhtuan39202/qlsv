@@ -1,55 +1,79 @@
 "use client";
+import { Department, Gender, Instructor } from "@prisma/client";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { Department, Specialized } from "@prisma/client";
 import toast from "react-hot-toast";
+import { addInstructor } from "../../lib/prisma/instructor";
 import { getAllDepartments } from "../../lib/prisma/department";
-import { addSpecialized } from "../../lib/prisma/spec";
+
 function Page() {
-    async function add(value: Specialized) {
-        const { id, name, description, department_id } = value;
-        await addSpecialized({
-            id,
-            name,
-            description,
-            department_id,
-        });
-    }
-    const formikSchema = Yup.object<Specialized>({
-        id: Yup.string().required("Vui lòng nhập mã chuyên ngành"),
-        name: Yup.string().required("Vui lòng nhập tên chuyên ngành"),
-        description: Yup.string(),
-        department_id: Yup.string().required("Vui lòng chọn khoa"),
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const [department, setDepartment] = useState<Department[]>([]);
+    const chooseImg = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            //read base64
+            const reader = new FileReader();
+            reader.readAsDataURL(e.target.files[0]);
+            reader.onload = () => {
+                setSelectedImage(reader.result as string);
+            };
+        }
+    };
+
+    const formikSchema = Yup.object().shape({
+        id: Yup.string().required("Vui lòng nhập mã giảng viên"),
+        fullname: Yup.string().required("Vui lòng nhập tên giảng viên"),
+        address: Yup.string().required("Vui lòng nhập địa chỉ"),
+        email: Yup.string()
+            .email("Địa chỉ email không hợp lệ")
+            .required("Vui lòng nhập email"),
+        phone: Yup.string()
+            .matches(/^\d{10}$/, "Số điện thoại phải có 10 chữ số")
+            .required("Vui lòng nhập số điện thoại"),
+        level: Yup.string().required("Vui lòng chọn trình độ"),
+        departmentId: Yup.string().nullable(),
+        image: Yup.string().url().nullable(),
+        gender: Yup.string().required("Vui lòng chọn giới tính"),
+        birth: Yup.date().required(),
     });
-    const formik = useFormik<Specialized>({
+
+    const formik = useFormik<Instructor>({
         initialValues: {
             id: "",
-            name: "",
-            description: "",
-            department_id: "",
+            fullname: "",
+            address: "",
+            email: "",
+            phone: "",
+            level: "",
+            departmentId: null,
+            image: null,
+            gender: Gender.MALE,
+            birth: new Date(),
         },
         validationSchema: formikSchema,
-        onSubmit: (value) => {
-            console.log(value);
-            toast.promise(add(value), {
-                loading: "Đang thêm...",
-                success: "Thêm thành công",
-                error: "Thêm thất bại mã chuyên ngành đã tồn tại",
-            });
-            formik.resetForm({
-                values: {
-                    id: "",
-                    name: "",
-                    description: "",
-                    department_id: "",
-                },
-            });
+        onSubmit: (value: Instructor) => {
+            toast.promise(
+                addInstructor({
+                    ...value,
+                    gender: value.gender as Gender,
+                    phone: value.phone + "",
+                    image: selectedImage,
+                    birth: new Date(value.birth),
+                }),
+                {
+                    loading: "Đang thêm...",
+                    success: () => {
+                        return "Thêm thành công";
+                    },
+                    error: (error) => {
+                        return "Thêm thất bại" + error.message;
+                    },
+                }
+            );
         },
     });
-    const [department, setDepartment] = React.useState([] as Department[]);
-
     useEffect(() => {
         (async () => {
             const allDepartment = await getAllDepartments();
@@ -57,26 +81,43 @@ function Page() {
         })();
     }, []);
     return (
-        <div className="min-h-screen w-full p-6">
-            <div className="my-8">
+        <div className="w-full min-h-screen p-6">
+            <div className="my-8 flex justify-between">
                 <span className="font-bold text-2xl">
-                    Thêm mới chuyên ngành
+                    Thêm mới thông tin giảng viên
                 </span>
             </div>
             <form
                 onSubmit={formik.handleSubmit}
-                className="flex flex-row gap-8"
+                className="flex flex-col lg:flex-row"
             >
-                <div className="max-w-md">
+                <div className="w-96">
+                    <div className=" mt-2">
+                        {selectedImage ? (
+                            <div className="avatar">
+                                <div className="w-96 h-96 rounded-md object-cover ">
+                                    <img src={selectedImage} />
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="w-96 h-96 bg-base-300 rounded-md flex items-center justify-center">
+                                Chọn ảnh đại diện
+                            </div>
+                        )}
+                    </div>
+                    <input
+                        type="file"
+                        onChange={chooseImg}
+                        className="file-input file-input-bordered file-input-primary mt-4 w-full"
+                    />
                     <div className="form-control">
-                        <label htmlFor="name" className="p-2">
-                            Mã chuyên ngành
-                        </label>
+                        <label className="label">Mã giảng viên</label>
                         <input
-                            onChange={formik.handleChange}
-                            name="id"
                             type="text"
-                            className="input input-bordered w-full max-w-sm"
+                            name="id"
+                            value={formik.values.id}
+                            onChange={formik.handleChange}
+                            className="input input-bordered max-w-lg w-full"
                         />
                         <p>
                             <span className="text-error">
@@ -85,93 +126,144 @@ function Page() {
                         </p>
                     </div>
                     <div className="form-control">
-                        <label htmlFor="name" className="p-2">
-                            Tên chuyên ngành
-                        </label>
-                        <input
-                            onChange={formik.handleChange}
-                            type="text"
-                            name="name"
-                            className="input input-bordered w-full max-w-sm"
-                        />
-                        <p>
-                            <span className="text-error">
-                                {formik.errors.name}
-                            </span>
-                        </p>
-                    </div>
-                    <div className="form-control">
-                        <label htmlFor="name" className="p-2">
-                            Thuộc khoa
-                        </label>
+                        <label className="label">Khoa</label>
                         <select
+                            name="departmentId"
                             onChange={formik.handleChange}
-                            name="department_id"
-                            defaultValue={"chọn khoa"}
-                            className="select select-bordered w-full max-w-sm"
+                            className="select select-bordered"
                         >
-                            <option value={"chọn khoa"}>Chọn khoa </option>
-                            {department.map((department) => (
-                                <option
-                                    value={department.id}
-                                    key={department.id}
-                                >
-                                    {department.name}
+                            <option>Chọn khoa</option>
+                            {department.map((d) => (
+                                <option value={d.id} key={d.id}>
+                                    {d.name}
                                 </option>
                             ))}
                         </select>
                         <p>
                             <span className="text-error">
-                                {formik.errors.department_id}
+                                {formik.errors.departmentId}
                             </span>
                         </p>
                     </div>
-                    <div className="form-control mt-4 flex flex-row gap-4 justify-between">
+                </div>
+                <div className="w-2/3 min-h-screen ml-16 space-y-5">
+                    <div className="form-control">
+                        <label className="label">Họ và tên</label>
                         <input
-                            type="submit"
-                            className="btn btn-primary"
-                            value={"Thêm"}
+                            value={formik.values.fullname}
+                            onChange={formik.handleChange}
+                            type="text"
+                            name="fullname"
+                            className="input input-bordered max-w-lg w-full"
                         />
+                        <p>
+                            <span className="text-error">
+                                {formik.errors.fullname}
+                            </span>
+                        </p>
+                    </div>
+                    <div className="form-control">
+                        <label className="label">Giới tính</label>
+                        <select
+                            name="gender"
+                            onChange={formik.handleChange}
+                            defaultValue={Gender.MALE}
+                            className="select select-bordered   max-w-lg w-full"
+                        >
+                            <option value={Gender.MALE}>Nam</option>
+                            <option value={Gender.FEMALE}>Nữ</option>
+                        </select>
+                        <p>
+                            <span className="text-error">
+                                {formik.errors.gender}
+                            </span>
+                        </p>
+                    </div>
+                    <div className="form-control">
+                        <label className="label">Ngày sinh</label>
                         <input
-                            type="reset"
-                            className="btn btn-secondary"
-                            value={"Xoá hết"}
-                            onClick={() => {
-                                formik.resetForm({
-                                    values: {
-                                        id: "",
-                                        name: "",
-                                        department_id: "",
-                                        description: "",
-                                    },
-                                });
-                            }}
+                            type="date"
+                            name="birth"
+                            required
+                            onChange={formik.handleChange}
+                            className="input input-bordered max-w-lg w-full"
                         />
+                    </div>
+                    <div className="form-control">
+                        <label className="label">Địa chỉ</label>
+                        <input
+                            type="text"
+                            name="address"
+                            value={formik.values.address}
+                            onChange={formik.handleChange}
+                            className="input input-bordered max-w-lg w-full"
+                        />
+                        <p>
+                            <span className="text-error">
+                                {formik.errors.address}
+                            </span>
+                        </p>
+                    </div>
+                    <div className="form-control">
+                        <label className="label">Trình độ</label>
+                        <select
+                            name="level"
+                            onChange={formik.handleChange}
+                            className="select select-bordered max-w-lg w-full"
+                        >
+                            <option>Chọn trình độ học vấn</option>
+                            <option value="Giáo sư">Giáo sư</option>
+                            <option value="Phó giáo sư">Phó giáo sư</option>
+                            <option value="Tiến sĩ">Tiến sĩ</option>
+                            <option value="Thạc sĩ">Thạc sĩ</option>
+                        </select>
+                        <p>
+                            <span className="text-error">
+                                {formik.errors.level}
+                            </span>
+                        </p>
+                    </div>
+                    <div className="form-control">
+                        <label className="label">Email</label>
+                        <input
+                            value={formik.values.email}
+                            onChange={formik.handleChange}
+                            type="text"
+                            name="email"
+                            className="input input-bordered max-w-lg w-full"
+                        />
+                        <p>
+                            <span className="text-error">
+                                {formik.errors.email}
+                            </span>
+                        </p>
+                    </div>
+                    <div className="form-control mt-2">
+                        <label className="label">Số điện thoại</label>
+                        <input
+                            value={formik.values.phone}
+                            onChange={formik.handleChange}
+                            type="number"
+                            name="phone"
+                            className="input input-bordered max-w-lg w-full"
+                        />
+                        <p>
+                            <span className="text-error">
+                                {formik.errors.phone}
+                            </span>
+                        </p>
+                    </div>
+                    <div className="form-control flex flex-row gap-4">
+                        <button type="submit" className="btn btn-primary">
+                            Thêm
+                        </button>
                         <Link
-                            href={"/spec"}
-                            type="submit"
-                            className="btn btn-accent"
+                            href={`/instructor/`}
+                            className="btn btn-secondary"
                         >
                             Quay lại
                         </Link>
                     </div>
-                </div>
-                <div className="form-control">
-                    <label htmlFor="name" className="p-2">
-                        Mô tả
-                    </label>
-                    <textarea
-                        onChange={formik.handleChange}
-                        name="description"
-                        cols={60}
-                        rows={4}
-                        className="textarea textarea-bordered textarea-lg w-full max-w-lg "
-                    />
-                    <p>
-                        <span className="text-error">
-                            {formik.errors.description}
-                        </span>
-                    </p>
                 </div>
             </form>
         </div>
