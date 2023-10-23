@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Department, Instructor } from "@prisma/client";
+import { Classes, Department, SchoolYear, Student } from "@prisma/client";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import {
@@ -12,34 +12,34 @@ import {
 } from "lucide-react";
 import { ColDef } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
-import { deleteInstructor, getAllIntructor } from "../lib/prisma/instructor";
 import { useAppContext } from "@/app/(provider)/appProvider";
+import { deleteStudent, getAllStudents } from "../lib/prisma/student";
 
-type instructorMixed = ({
+type studentMixed = ({
     department: Department | null;
-} & Instructor)[];
+    classes: Classes | null;
+    schoolyear: SchoolYear | null;
+} & Student)[];
 
 function Page() {
-    const [instructor, setIntructor] = useState<instructorMixed>([]);
-    const [selectedInstructor, setSelectedInstructor] = useState<string | null>(
-        null
-    );
+    const [studentList, setStudentList] = useState<studentMixed>([]);
+    const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
 
     useEffect(() => {
         (async () => {
-            const allIntructor = await getAllIntructor();
-            setIntructor(allIntructor);
+            const allStudent = await getAllStudents();
+            setStudentList(allStudent);
         })();
     }, []);
 
     const handleDelete = async () => {
-        toast.promise(deleteInstructor(selectedInstructor as string), {
+        toast.promise(deleteStudent(selectedStudent as string), {
             loading: "Đang xoá...",
             success: () => {
-                setIntructor(
-                    instructor.filter((i) => i.id !== selectedInstructor)
+                setStudentList(
+                    studentList.filter((i) => i.id !== selectedStudent)
                 );
-                setSelectedInstructor(null);
+                setSelectedStudent(null);
                 modalRef.current?.close();
                 return "Xoá thành công";
             },
@@ -52,7 +52,7 @@ function Page() {
     const columnDefs: ColDef[] = [
         {
             field: "id",
-            headerName: "Mã giảng viên",
+            headerName: "Mã sinh viên",
             floatingFilter: true,
         },
         {
@@ -71,7 +71,7 @@ function Page() {
         },
         {
             field: "fullname",
-            headerName: "Tên giảng viên",
+            headerName: "Tên sinh viên",
             floatingFilter: true,
         },
         {
@@ -80,8 +80,8 @@ function Page() {
             floatingFilter: true,
         },
         {
-            field: "phone",
-            headerName: "Số điện thoại",
+            field: "schoolyear.schoolyear",
+            headerName: "Niên khoá",
             floatingFilter: true,
         },
         {
@@ -93,20 +93,20 @@ function Page() {
                 return (
                     <div className="flex gap-2 items-center h-full">
                         <Link
-                            href={`/instructor/${params.value}`}
+                            href={`/student/${params.value}`}
                             className="btn btn-link btn-xs"
                         >
                             <Eye color="hsl(var(--su))" />
                         </Link>
                         <Link
-                            href={`/instructor/edit/${params.value}`}
+                            href={`/student/edit/${params.value}`}
                             className="btn btn-link btn-xs"
                         >
                             <FileSignature color="hsl(var(--wa))" />
                         </Link>
                         <button
                             onClick={() => {
-                                setSelectedInstructor(params.value);
+                                setSelectedStudent(params.value);
                                 modalRef?.current?.showModal();
                             }}
                             className="btn btn-link btn-xs"
@@ -122,13 +122,13 @@ function Page() {
     return (
         <div className="min-h-screen w-full p-6">
             <div className="bg-base-100">
-                <Link href={"/instructor/add"} className="btn btn-primary">
+                <Link href={"/student/add"} className="btn btn-primary">
                     <PlusCircle />
                     Thêm mới
                 </Link>
                 <div className="my-8 flex ">
                     <span className="font-bold text-2xl">
-                        Danh sách tất cả giảng viên
+                        Danh sách tất cả sinh viên
                     </span>
 
                     <div className="ml-auto flex gap-2"></div>
@@ -149,7 +149,7 @@ function Page() {
                                 filter: true,
                             }}
                             columnDefs={columnDefs}
-                            rowData={instructor}
+                            rowData={studentList}
                             pagination
                             animateRows
                             paginationPageSize={20}

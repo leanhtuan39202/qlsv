@@ -49,7 +49,7 @@ function Page({ params }: Props) {
             .email("Địa chỉ email không hợp lệ")
             .required("Vui lòng nhập email"),
         phone: Yup.string()
-            .matches(/^\d{10}$/, "Số điện thoại phải có 10 chữ số")
+            .matches(/^\d{10,11}$/, "Số điện thoại phải có 10 - 11 chữ số")
             .required("Vui lòng nhập số điện thoại"),
         level: Yup.string().required("Vui lòng chọn trình độ"),
         departmentId: Yup.string().nullable(),

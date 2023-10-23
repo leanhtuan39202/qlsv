@@ -10,7 +10,7 @@ function SpecializedLayout({ children }: { children: React.ReactNode }) {
                         <Link href={"/"}>Trang chủ</Link>
                     </li>
                     <li>
-                        <Link href={"/instructor/"}>Giảng viên</Link>
+                        <Link href={"/student/"}>Sinh viên</Link>
                     </li>
                 </ul>
             </div>

@@ -37,6 +37,12 @@ const getClassByIdWithNoRelation = async (id: string) => {
     });
     return classes;
 }
+const getAllClassWithNoRelation = async () => {
+    const classes = await prisma.classes.findMany({
+
+    });
+    return classes;
+}
 const createClass = async (data: Classes, student?: Student[],) => {
     const classes = await prisma.classes.create({
         data: {
@@ -68,4 +74,4 @@ const deleteClass = async (id: string) => {
     });
     return classes;
 }
-export { getAllClasses, getClassById, createClass, deleteClass, updateClass, getClassByIdWithNoRelation };
+export { getAllClasses, getClassById, createClass, deleteClass, updateClass, getClassByIdWithNoRelation, getAllClassWithNoRelation };
