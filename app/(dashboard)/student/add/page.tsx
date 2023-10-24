@@ -608,10 +608,7 @@ function Page() {
                         <button type="submit" className="btn btn-primary">
                             Thêm
                         </button>
-                        <Link
-                            href={`/instructor/`}
-                            className="btn btn-secondary"
-                        >
+                        <Link href={`/student/`} className="btn btn-secondary">
                             Quay lại
                         </Link>
                     </div>

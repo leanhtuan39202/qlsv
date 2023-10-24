@@ -46,7 +46,7 @@ function TopStudent() {
     console.log(selectedDepartment);
 
     return (
-        <div className="w-96 md:w-1/3 bg-base-200 p-4 mt-6 rounded-md shadow-xl">
+        <div className="w-96 lg:w-[30%] md:w-1/3 bg-base-200 p-4 mt-6 rounded-md shadow-xl">
             <div className="flex flex-row justify-between items-center">
                 <h1 className="text-lg">Top học sinh</h1>
                 <select

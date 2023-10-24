@@ -45,6 +45,11 @@ enum Status {
     RESERVE
 }
 
+enum ScoreStatus {
+    PASSED
+    FAILED
+}
+
 model Classes {
     id             String       @id
     name           String
@@ -67,23 +72,35 @@ enum Gender {
 model Subject {
     id           String      @id
     name         String
-    Score        Score[]
     departmentId String?
     credit       Int
     department   Department? @relation(fields: [departmentId], references: [id], onUpdate: Cascade, onDelete: SetNull)
-    Student      Student[]
+    Term         Term[]
+}
+
+model Term {
+    id        String   @id
+    name      String
+    subject   Subject? @relation(fields: [subjectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    subjectId String?
+    Score     Score[]
+    Student   Student? @relation(fields: [studentId], references: [id])
+    studentId String?
 }
 
 model Score {
-    id        Int      @id @default(autoincrement())
-    CC        Float
+    id        Int          @id @default(autoincrement())
+    CC        Float?
     Midterm   Float?
     Final     Float?
-    Total     Float?
+    Total4    Float?
+    Total10   Float?
     studentId String?
-    subject   Subject? @relation(fields: [subjectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-    subjectId String?
-    Student   Student? @relation(fields: [studentId], references: [id])
+    Student   Student?     @relation(fields: [studentId], references: [id])
+    term      Term         @relation(fields: [termId], references: [id])
+    status    ScoreStatus?
+    termId    String
+    ScoreText String?
 }
 
 model Instructor {
@@ -113,7 +130,7 @@ model Student {
     specialized_id String?
     classes        Classes?     @relation(fields: [class_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
     class_id       String?
-    Subject        Subject[]
+    Term           Term[]
     Score          Score[]
     StudentInfo    StudentInfo?
 }
@@ -130,7 +147,8 @@ model StudentInfo {
     Student              Student  @relation(fields: [student_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
     student_id           String   @unique
     status               Status   @default(STUDYING)
-    gpa                  Float
+    gpa4                 Float    @default(0)
+    gpa10                Float    @default(0)
     email                String   @unique
     gender               Gender?
     image                String?  @db.LongText

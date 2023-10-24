@@ -33,8 +33,24 @@ const getStudentById = async (id: string) => {
             specialized: true
         }
     })
-
     return student
+}
+const getStudentByIdToUpdate = async (id: string) => {
+    const student = await prisma.student.findUnique({
+        where: {
+            id
+        },
+    })
+    const studentInfo = await prisma.studentInfo.findUnique({
+        where: {
+            id
+        }
+    })
+
+    return {
+        StudentInfo: studentInfo,
+        student: student
+    }
 }
 const deleteStudent = async (id: string) => {
     return await prisma.student.delete({
@@ -51,10 +67,21 @@ const createStudent = async (student: Student, StudentInfo: StudentInfo) => {
         data: StudentInfo
     })
 }
-const updateStudent = async (student: Student) => {
-
+const updateStudent = async (student: Student, StudentInfo: StudentInfo) => {
+    await prisma.student.update({
+        where: {
+            id: student.id
+        },
+        data: student
+    })
+    await prisma.studentInfo.update({
+        where: {
+            id: StudentInfo.id
+        },
+        data: StudentInfo
+    })
 }
 const getTopStudent = async () => {
 
 }
-export { getAllStudents, getAllStudent, getStudentById, deleteStudent, createStudent, updateStudent, getTopStudent }
+export { getAllStudents, getAllStudent, getStudentById, deleteStudent, createStudent, updateStudent, getTopStudent, getStudentByIdToUpdate };

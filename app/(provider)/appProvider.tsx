@@ -29,7 +29,7 @@ function AppProvider({ children }: IProps) {
             document.documentElement?.setAttribute("data-theme", currentTheme);
         } else {
             setTheme("cupcake");
-            document.documentElement?.setAttribute("data-theme", "cupcake");
+            document.documentElement?.setAttribute("data-theme", "cmyk");
         }
         if (currentChartTheme) {
             setChartTheme(currentChartTheme);

@@ -34,7 +34,7 @@ function ClassficationChart() {
     }, []);
     const { chartTheme } = useContext(AppContext);
     return (
-        <div className="w-96 bg-base-200 p-4 mt-6 rounded-md shadow-xl">
+        <div className="w-96 lg:w-[30%] bg-base-200 p-4 mt-6 rounded-md shadow-xl">
             <div className="flex flex-row justify-between items-center">
                 <h1 className="text-lg">Kết quả học tập</h1>
             </div>

@@ -9,7 +9,6 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { Department } from "@prisma/client";
 import toast from "react-hot-toast";
-import { redirect } from "next/navigation";
 
 interface Props {
     params: {

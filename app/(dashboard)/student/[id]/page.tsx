@@ -1,23 +1,8 @@
-import {
-    Classes,
-    Department,
-    Gender,
-    SchoolYear,
-    Specialized,
-    Status,
-    Student,
-    StudentInfo,
-} from "@prisma/client";
+import { Gender } from "@prisma/client";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import * as Yup from "yup";
-import { useFormik } from "formik";
-import toast from "react-hot-toast";
-import { getAllDepartments } from "../../lib/prisma/department";
-import { getAllSchoolYear } from "../../lib/prisma/schoolyear";
-import { getAllClassWithNoRelation } from "../../lib/prisma/classes";
-import { getAllSpecialized } from "../../lib/prisma/spec";
-import { createStudent, getStudentById } from "../../lib/prisma/student";
+import React from "react";
+
+import { getStudentById } from "../../lib/prisma/student";
 
 interface Props {
     params: {
@@ -117,7 +102,11 @@ async function Page({ params }: Props) {
                     <div className="form-control">
                         <label className="label">Giới tính</label>
                         <input
-                            value={studentInfo?.StudentInfo?.gender || ""}
+                            value={
+                                studentInfo?.StudentInfo?.gender === Gender.MALE
+                                    ? "Nam"
+                                    : "Nữ" || ""
+                            }
                             type="text"
                             disabled
                             className="input input-bordered  w-full"

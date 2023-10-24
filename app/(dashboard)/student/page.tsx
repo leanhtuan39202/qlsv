@@ -1,6 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Classes, Department, SchoolYear, Student } from "@prisma/client";
+import {
+    Classes,
+    Department,
+    SchoolYear,
+    Status,
+    Student,
+    StudentInfo,
+} from "@prisma/client";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import {
@@ -19,6 +26,7 @@ type studentMixed = ({
     department: Department | null;
     classes: Classes | null;
     schoolyear: SchoolYear | null;
+    StudentInfo: StudentInfo | null;
 } & Student)[];
 
 function Page() {
@@ -56,7 +64,7 @@ function Page() {
             floatingFilter: true,
         },
         {
-            field: "image",
+            field: "StudentInfo.image",
             headerName: "Ảnh",
             floatingFilter: false,
             cellRenderer: (params: any) => {
@@ -83,6 +91,30 @@ function Page() {
             field: "schoolyear.schoolyear",
             headerName: "Niên khoá",
             floatingFilter: true,
+        },
+        {
+            field: "StudentInfo.status",
+            headerName: "Trạng thái",
+            floatingFilter: false,
+            cellRenderer: (params: any) => {
+                return (
+                    <div className="flex gap-2 items-center">
+                        {params.value === Status.STUDYING ? (
+                            <div className="badge badge-info  badge-lg">
+                                Đang học
+                            </div>
+                        ) : params.value === Status.STOP ? (
+                            <div className="badge badge-error badge-lg">
+                                Thôi học
+                            </div>
+                        ) : (
+                            <div className="badge badge-warning badge-lg">
+                                Bảo lưu
+                            </div>
+                        )}
+                    </div>
+                );
+            },
         },
         {
             field: "id",
