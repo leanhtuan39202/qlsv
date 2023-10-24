@@ -118,7 +118,7 @@ function Page() {
         },
         {
             field: "id",
-            headerName: "Hành dộng",
+            headerName: "Hành động",
             floatingFilter: false,
 
             cellRenderer: (params: any) => {

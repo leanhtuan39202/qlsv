@@ -1,44 +1,46 @@
 "use client";
 import { AppContext } from "@/app/(provider)/appProvider";
-import { getAllStudents } from "@/app/(dashboard)/lib/prisma/student";
-import { Student, Gender } from "@prisma/client";
 import React, { useContext, useEffect, useState } from "react";
 import Chart from "react-apexcharts";
-function GenderChart() {
-    const [student, setStudent] = useState<Student[]>([] as Student[]);
+import { getAllIntructor } from "@/app/(dashboard)/lib/prisma/instructor";
+
+function InstructorLevel() {
     const [chartData, setChartData] = useState<number[]>([]);
     const { chartTheme } = useContext(AppContext);
-
     useEffect(() => {
         (async () => {
-            const allStudent = await getAllStudents();
-            setStudent(allStudent);
-            const male = allStudent.filter(
-                (s) => s!.StudentInfo?.gender == Gender.MALE
+            const allInstructor = await getAllIntructor();
+            const gs = allInstructor.filter(
+                (s) => s!.level === "Giáo sư"
             ).length;
-            const female = allStudent.filter(
-                (s) => s!.StudentInfo?.gender == Gender.FEMALE
+            const psg = allInstructor.filter(
+                (s) => s!.level == "Phó giáo sư"
             ).length;
-
-            setChartData([male, female]);
+            const tiensi = allInstructor.filter(
+                (s) => s!.level == "Tiến sĩ"
+            ).length;
+            const thacsi = allInstructor.filter(
+                (s) => s!.level == "Thạc sĩ"
+            ).length;
+            setChartData([gs, psg, tiensi, thacsi]);
         })();
     }, []);
 
     return (
         <div className="w-96 xl:w-[30%] bg-base-200 p-4 mt-6 rounded-md shadow-xl">
             <div className="flex flex-row justify-between items-center">
-                <h1 className="text-lg">Thống kê sinh viên</h1>
+                <h1 className="text-lg">Thống kê giảng viên</h1>
             </div>
             <div className="divider"></div>
             <div className="flex justify-center items-center h-96 w-full">
-                {student.length > 0 ? (
+                {chartTheme.length > 0 ? (
                     <div>
                         <Chart
                             width={384}
                             type="bar"
                             options={{
                                 title: {
-                                    text: "Giới tính",
+                                    text: "Trình độ",
                                     align: "left",
                                     style: {
                                         fontSize: "16px",
@@ -62,10 +64,15 @@ function GenderChart() {
                                     palette: chartTheme,
                                 },
                                 xaxis: {
-                                    categories: ["Nam", "Nữ"],
+                                    categories: [
+                                        "Giáo sư",
+                                        "Phó giáo sư",
+                                        "Tiến sĩ",
+                                        "Thạc sĩ",
+                                    ],
                                     labels: {
                                         style: {
-                                            fontSize: "16px",
+                                            fontSize: "12px",
                                             fontFamily: "inherit",
                                             colors: [
                                                 "hsl(var(--bc))",
@@ -100,4 +107,4 @@ function GenderChart() {
     );
 }
 
-export default GenderChart;
+export default InstructorLevel;

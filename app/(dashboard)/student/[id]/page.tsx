@@ -1,4 +1,4 @@
-import { Gender } from "@prisma/client";
+import { Gender, Status } from "@prisma/client";
 import Link from "next/link";
 import React from "react";
 
@@ -16,7 +16,7 @@ async function Page({ params }: Props) {
         <div className="w-full min-h-screen p-6">
             <div className="my-8 flex justify-between">
                 <span className="font-bold text-2xl">
-                    Thêm mới thông tin sinh viên
+                    Thông tin sinh viên: {studentInfo?.fullname}
                 </span>
             </div>
             <form className="flex flex-col lg:flex-row">
@@ -205,6 +205,58 @@ async function Page({ params }: Props) {
                             />
                         </div>
                     </div>
+                    <fieldset
+                        className="border border-solid py-8 px-4"
+                        style={{
+                            borderColor: "hsl(var(--bc) / 0.2",
+                            borderRadius: "var(--rounded-btn, 0.5rem)",
+                            borderWidth: 1,
+                        }}
+                    >
+                        <legend className="label font-semibold">
+                            Tình trạng học tập
+                        </legend>
+                        <div className="flex flex-col">
+                            <div className="form-control flex flex-row gap-8">
+                                <div className="form-control w-full">
+                                    <label className="label">Trạng thái</label>
+                                    <input
+                                        type="text"
+                                        disabled
+                                        value={
+                                            studentInfo?.StudentInfo?.status ===
+                                            Status.STUDYING
+                                                ? "Đang học"
+                                                : studentInfo?.StudentInfo
+                                                      ?.status === Status.STOP
+                                                ? "Thôi học"
+                                                : "Bảo lưu"
+                                        }
+                                        className="input input-bordered w-full"
+                                    />
+                                </div>
+                                <div className="form-control w-full">
+                                    <label className="label">Điểm hệ 10</label>
+                                    <input
+                                        type="text"
+                                        disabled
+                                        value={studentInfo?.StudentInfo?.gpa10}
+                                        className="input input-bordered w-full"
+                                    />
+                                </div>
+                                <div className="form-control w-full">
+                                    <label className="label">Điểm hệ 4</label>
+                                    <input
+                                        type="text"
+                                        disabled
+                                        name="StudentInfo.fatherPhone"
+                                        value={studentInfo?.StudentInfo?.gpa4}
+                                        className="input input-bordered w-full"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
                     <fieldset
                         className="border border-solid py-8 px-4"
                         style={{

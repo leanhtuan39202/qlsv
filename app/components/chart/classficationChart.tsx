@@ -1,32 +1,29 @@
 "use client";
 import { AppContext } from "@/app/(provider)/appProvider";
 import { getAllStudents } from "@/app/(dashboard)/lib/prisma/student";
-import { Student } from "@prisma/client";
 import React, { useEffect, useState, useContext } from "react";
 import Chart from "react-apexcharts";
 
 function ClassficationChart() {
-    const [student, setStudent] = useState<Student[]>([] as Student[]);
     const [chartData, setChartData] = useState<number[]>([]);
 
     useEffect(() => {
         (async () => {
             const allStudent = await getAllStudents();
-            setStudent(allStudent);
             const xuatSac = allStudent.filter(
-                (s) => s!.StudentInfo!.gpa >= 3.6
+                (s) => s!.StudentInfo!.gpa4 >= 3.6
             ).length;
             const gioi = allStudent.filter(
-                (s) => s!.StudentInfo!.gpa >= 3.2 && s!.StudentInfo!.gpa < 3.6
+                (s) => s!.StudentInfo!.gpa4 >= 3.2 && s!.StudentInfo!.gpa4 < 3.6
             ).length;
             const kha = allStudent.filter(
-                (s) => s!.StudentInfo!.gpa >= 2.5 && s!.StudentInfo!.gpa < 3.2
+                (s) => s!.StudentInfo!.gpa4 >= 2.5 && s!.StudentInfo!.gpa4 < 3.2
             ).length;
             const tb = allStudent.filter(
-                (s) => s!.StudentInfo!.gpa >= 2.0 && s!.StudentInfo!.gpa < 2.5
+                (s) => s!.StudentInfo!.gpa4 >= 2.0 && s!.StudentInfo!.gpa4 < 2.5
             ).length;
             const yeu = allStudent.filter(
-                (s) => s!.StudentInfo!.gpa >= 1.0 && s!.StudentInfo!.gpa < 2.0
+                (s) => s!.StudentInfo!.gpa4 >= 1.0 && s!.StudentInfo!.gpa4 < 2.0
             ).length;
 
             setChartData([xuatSac, gioi, kha, tb, yeu]);
@@ -34,13 +31,13 @@ function ClassficationChart() {
     }, []);
     const { chartTheme } = useContext(AppContext);
     return (
-        <div className="w-96 lg:w-[30%] bg-base-200 p-4 mt-6 rounded-md shadow-xl">
+        <div className="w-96 xl:w-[30%] bg-base-200 p-4 mt-6 rounded-md shadow-xl">
             <div className="flex flex-row justify-between items-center">
                 <h1 className="text-lg">Kết quả học tập</h1>
             </div>
             <div className="divider" />
             <div className="flex justify-center items-center h-96 w-full">
-                {student.length > 0 ? (
+                {chartData.length > 0 ? (
                     <div>
                         <Chart
                             width={384}

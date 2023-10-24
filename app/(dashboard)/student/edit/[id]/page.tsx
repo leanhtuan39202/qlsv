@@ -518,6 +518,32 @@ function Page({ params }: Props) {
                             </p>
                         </div>
                     </div>
+                    <div className="form-control w-full">
+                        <label className="label">Trạng thái học tập</label>
+                        <select
+                            name="StudentInfo.status"
+                            onChange={formik.handleChange}
+                            value={formik.values.StudentInfo.status}
+                            className="select select-bordered w-full"
+                        >
+                            {[Status.STUDYING, Status.STOP, Status.RESERVE].map(
+                                (d) => (
+                                    <option value={d} key={d}>
+                                        {d === Status.STUDYING
+                                            ? "Đang học"
+                                            : d === Status.STOP
+                                            ? "Thôi học"
+                                            : "Bảo lưu"}
+                                    </option>
+                                )
+                            )}
+                        </select>
+                        <p>
+                            <span className="text-error">
+                                {formik.errors.student?.class_id}
+                            </span>
+                        </p>
+                    </div>
                     <fieldset
                         className="border border-solid py-8 px-4"
                         style={{

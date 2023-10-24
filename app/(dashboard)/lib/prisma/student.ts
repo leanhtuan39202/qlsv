@@ -60,12 +60,20 @@ const deleteStudent = async (id: string) => {
     })
 }
 const createStudent = async (student: Student, StudentInfo: StudentInfo) => {
-    await prisma.student.create({
-        data: student
-    })
-    await prisma.studentInfo.create({
-        data: StudentInfo
-    })
+    try {
+        await prisma.student.create({
+            data: student
+        })
+    } catch (error) {
+        throw error
+    }
+    try {
+        await prisma.studentInfo.create({
+            data: StudentInfo
+        })
+    } catch (error) {
+        throw error
+    }
 }
 const updateStudent = async (student: Student, StudentInfo: StudentInfo) => {
     await prisma.student.update({
@@ -82,6 +90,15 @@ const updateStudent = async (student: Student, StudentInfo: StudentInfo) => {
     })
 }
 const getTopStudent = async () => {
-
+    const top10 = await prisma.studentInfo.findMany({
+        include: {
+            Student: true
+        },
+        orderBy: {
+            gpa4: 'desc'
+        },
+        take: 10
+    })
+    return top10
 }
 export { getAllStudents, getAllStudent, getStudentById, deleteStudent, createStudent, updateStudent, getTopStudent, getStudentByIdToUpdate };

@@ -16,6 +16,7 @@ import SchoolYearImg from "../../public/image/nk.png";
 import { getAllIntructor } from "./lib/prisma/instructor";
 import { getAllClasses } from "./lib/prisma/classes";
 import { getAllSchoolYear } from "./lib/prisma/schoolyear";
+import InstructorLevel from "../components/chart/instructorLevel";
 interface DisplayData {
     name: string;
     value: number;
@@ -108,6 +109,7 @@ export default async function Home() {
                 <GenderChart />
                 <ClassficationChart />
                 <TopStudent />
+                <InstructorLevel />
             </div>
         </div>
     );

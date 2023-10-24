@@ -76,10 +76,10 @@ function Page() {
             id: Yup.string().required("Vui lòng nhập mã sinh viên"),
             fullname: Yup.string().required("Vui lòng nhập tên sinh viên"),
             address: Yup.string().required("Vui lòng nhập địa chỉ"),
-            department_id: Yup.string().nullable(),
-            schoolyear_id: Yup.number().nullable(),
-            specialized_id: Yup.string().nullable(),
-            class_id: Yup.string().nullable(),
+            department_id: Yup.string().required("Vui lòng chọn khoa"),
+            schoolyear_id: Yup.number().required("Vui lòng chọn niên khoá"),
+            specialized_id: Yup.string().required("Vui lòng chọn chuyên ngành"),
+            class_id: Yup.string().required("Vui lòng chọn lớp"),
         }),
     });
 
@@ -135,13 +135,20 @@ function Page() {
         student: Student;
         StudentInfo: Partial<StudentInfo>;
     }) => {
-        createStudent(value.student, {
-            ...value.StudentInfo,
-            id: value.student.id,
-            student_id: value.student.id,
-            image: selectedImage,
-            gpa: 0,
-        } as StudentInfo);
+        createStudent(
+            {
+                ...value.student,
+                schoolyear_id: Number(value.student.schoolyear_id),
+            },
+            {
+                ...value.StudentInfo,
+                id: value.student.id,
+                student_id: value.student.id,
+                image: selectedImage,
+                gpa10: 0,
+                gpa4: 0,
+            } as StudentInfo
+        );
     };
     useEffect(() => {
         (async () => {

@@ -18,3 +18,11 @@
     display: flex;
     align-items: center;
 }
+.ag-cell-focus,
+.ag-cell-no-focus {
+    border: none !important;
+}
+.no-border.ag-cell:focus {
+    border: none !important;
+    outline: none;
+}

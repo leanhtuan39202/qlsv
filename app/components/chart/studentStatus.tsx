@@ -26,7 +26,7 @@ function StudentStatus() {
     }, []);
 
     return (
-        <div className="w-96 lg:w-[30%] bg-base-200 p-4 mt-6 rounded-md shadow-xl">
+        <div className="w-96 xl:w-[30%] bg-base-200 p-4 mt-6 rounded-md shadow-xl">
             <div className="flex flex-row justify-between items-center">
                 <h1 className="text-lg">Tình trạng học tập</h1>
             </div>

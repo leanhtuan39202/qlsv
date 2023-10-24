@@ -157,7 +157,7 @@ model StudentInfo {
     homeTown             String
     fatherName           String
     motherName           String
-    identificationNumber String
+    identificationNumber String   @unique
     fatherPhone          String?
     motherPhone          String?
     motherWork           String?
