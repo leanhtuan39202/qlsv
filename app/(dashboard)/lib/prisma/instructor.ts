@@ -1,6 +1,7 @@
 "use server";
+import { Md5 } from 'ts-md5';
 import prisma from '.'
-import { Instructor } from '@prisma/client';
+import { Instructor, Role } from '@prisma/client';
 const getAllIntructor = async () => {
     const allInstructor = prisma.instructor.findMany({
         include: {
@@ -24,6 +25,13 @@ const getInstructorById = async (id: string) => {
     return instructor
 }
 const addInstructor = async (instructor: Instructor) => {
+    await prisma.user.create({
+        data: {
+            password: Md5.hashStr('1111'),
+            username: instructor.id,
+            role: Role.INSTRUCTOR
+        }
+    })
     await prisma.instructor.create({
         data: instructor
     })

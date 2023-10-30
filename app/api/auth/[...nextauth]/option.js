@@ -1,6 +1,7 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import { env } from "process";
 import { login } from "@/app/(dashboard)/lib/prisma/user";
+import { Md5 } from "ts-md5";
 export const authOption = {
     providers: [
         CredentialsProvider({
@@ -8,7 +9,7 @@ export const authOption = {
             authorize: async (credentials, _req) => {
                 const user1 = await login(
                     credentials.username,
-                    credentials.password
+                    Md5.hashStr(credentials.password)
                 );
                 const user = {
                     name: user1?.username,

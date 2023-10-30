@@ -1,17 +1,13 @@
+import { getStudentById } from "@/app/(dashboard)/lib/prisma/student";
+import { authOption } from "@/app/api/auth/[...nextauth]/option";
 import { Gender, Status } from "@prisma/client";
+import { getServerSession } from "next-auth";
 import Link from "next/link";
 import React from "react";
 
-import { getStudentById } from "../../lib/prisma/student";
-
-interface Props {
-    params: {
-        id: string;
-    };
-}
-async function Page({ params }: Props) {
-    const { id } = params;
-    const studentInfo = await getStudentById(id);
+async function Page() {
+    const session = (await getServerSession(authOption as any)) as any;
+    const studentInfo = await getStudentById(session?.user?.name as string);
     return (
         <div className="w-full min-h-screen p-6">
             <div className="my-8 flex justify-between">
@@ -235,25 +231,6 @@ async function Page({ params }: Props) {
                                         className="input input-bordered w-full"
                                     />
                                 </div>
-                                {/* <div className="form-control w-full">
-                                    <label className="label">Điểm hệ 10</label>
-                                    <input
-                                        type="text"
-                                        disabled
-                                        value={studentInfo?.StudentInfo?.gpa10}
-                                        className="input input-bordered w-full"
-                                    />
-                                </div>
-                                <div className="form-control w-full">
-                                    <label className="label">Điểm hệ 4</label>
-                                    <input
-                                        type="text"
-                                        disabled
-                                        name="StudentInfo.fatherPhone"
-                                        value={studentInfo?.StudentInfo?.gpa4}
-                                        className="input input-bordered w-full"
-                                    />
-                                </div> */}
                             </div>
                         </div>
                     </fieldset>
@@ -354,12 +331,9 @@ async function Page({ params }: Props) {
 
                     <div className="form-control flex flex-row gap-4">
                         <Link
-                            href={`/student/edit/${studentInfo?.id}`}
-                            className="btn btn-primary"
+                            href={`/studentpage/`}
+                            className="btn btn-secondary"
                         >
-                            Chỉnh sửa thông tin
-                        </Link>
-                        <Link href={`/student/`} className="btn btn-secondary">
                             Quay lại
                         </Link>
                     </div>

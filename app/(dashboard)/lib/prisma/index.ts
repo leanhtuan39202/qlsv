@@ -1,20 +1,17 @@
-import { Gender, PrismaClient, Status, Student } from "@prisma/client";
+import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient();
+const prismaClientSingleton = () => {
+    return new PrismaClient()
+}
 
+type PrismaClientSingleton = ReturnType<typeof prismaClientSingleton>
 
-// async function main() {
-//     for (let i = 0; i < 100; i++) {
-//         await prisma.department.create({
-//             data: {
-//                 name: `Department ${i}`,
-//                 founding: new Date(),
-//                 description: `Description ${i}`,
-//                 id: `Department ${i}`,
-//             },
-//         })
-//     }
-//     console.log('ok');
-// }
-// main()
-export default prisma;
+const globalForPrisma = globalThis as unknown as {
+    prisma: PrismaClientSingleton | undefined
+}
+
+const prisma = globalForPrisma.prisma ?? prismaClientSingleton()
+
+export default prisma
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma

@@ -116,6 +116,7 @@ function Page() {
                 schoolyear_id: null,
                 specialized_id: null,
                 class_id: null,
+                user_id: "",
             },
         },
         validationSchema: formikSchema,
@@ -138,6 +139,7 @@ function Page() {
         createStudent(
             {
                 ...value.student,
+                user_id: value.student.id,
                 schoolyear_id: Number(value.student.schoolyear_id),
             },
             {
@@ -145,8 +147,6 @@ function Page() {
                 id: value.student.id,
                 student_id: value.student.id,
                 image: selectedImage,
-                gpa10: 0,
-                gpa4: 0,
             } as StudentInfo
         );
     };

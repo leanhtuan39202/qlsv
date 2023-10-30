@@ -51,12 +51,14 @@ function Page() {
             image: null,
             gender: Gender.MALE,
             birth: new Date(),
+            user_id: "",
         },
         validationSchema: formikSchema,
         onSubmit: (value: Instructor) => {
             toast.promise(
                 addInstructor({
                     ...value,
+                    user_id: value.id,
                     gender: value.gender as Gender,
                     phone: value.phone + "",
                     image: selectedImage,

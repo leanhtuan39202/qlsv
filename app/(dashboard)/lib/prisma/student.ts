@@ -1,6 +1,7 @@
 "use server";
-import { Student, StudentInfo } from "@prisma/client";
+import { Role, Student, StudentInfo } from "@prisma/client";
 import prisma from ".";
+import { Md5 } from "ts-md5";
 
 
 const getAllStudents = async () => {
@@ -61,19 +62,23 @@ const deleteStudent = async (id: string) => {
 }
 const createStudent = async (student: Student, StudentInfo: StudentInfo) => {
     try {
+        await prisma.user.create({
+            data: {
+                password: Md5.hashStr('1111'),
+                username: student.id,
+                role: Role.STUDENT
+            }
+        })
         await prisma.student.create({
             data: student
         })
-    } catch (error) {
-        throw error
-    }
-    try {
         await prisma.studentInfo.create({
             data: StudentInfo
         })
     } catch (error) {
         throw error
     }
+
 }
 const updateStudent = async (student: Student, StudentInfo: StudentInfo) => {
     await prisma.student.update({
@@ -94,9 +99,9 @@ const getTopStudent = async () => {
         include: {
             Student: true
         },
-        orderBy: {
-            gpa4: 'desc'
-        },
+        // orderBy: {
+        //     gpa4: 'desc'
+        // },
         take: 10
     })
     return top10
