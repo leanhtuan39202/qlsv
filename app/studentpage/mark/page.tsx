@@ -31,6 +31,7 @@ async function Page() {
     const failCredit = allScore
         ?.filter((s) => s.status === ScoreStatus.FAILED)
         .reduce((a, b) => a + b.term.subject.credit, 0);
+
     return (
         <div className="flex flex-col  w-full min-h-screen relative">
             <h1 className="text-2xl font-bold p-6">Kết quả học tập</h1>
@@ -85,22 +86,7 @@ async function Page() {
                 <div className="space-y-4">
                     <p>Điểm hệ 10: {score10}</p>
                     <p>Điểm hệ 4: {score4} </p>
-                    <p>
-                        Xếp loại học tập:{" "}
-                        {classifyStudent(
-                            +(
-                                allScore.reduce(
-                                    (a, b) =>
-                                        a + b.term.subject.credit * b.Total4!,
-                                    0
-                                ) /
-                                allScore?.reduce(
-                                    (a, b) => a + b.term.subject.credit,
-                                    0
-                                )
-                            ).toFixed(1)
-                        )}{" "}
-                    </p>
+                    <p>Xếp loại học tập: {classifyStudent(+score4)} </p>
                 </div>
             </div>
         </div>

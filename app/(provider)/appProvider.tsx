@@ -39,7 +39,7 @@ function AppProvider({ children }: IProps) {
 
         setTimeout(() => setLoading(false), 1500);
         setIsFistRender(false);
-    }, [setTheme]);
+    }, []);
 
     const changeTheme = (theme: string) => {
         setTheme(theme);

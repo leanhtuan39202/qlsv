@@ -1,5 +1,5 @@
 'use server'
-import { ScoreStatus, ScoreText } from "@prisma/client";
+import { ScoreStatus } from "@prisma/client";
 import prisma from ".";
 import { caculateScore10, caculateScore4, caculateScoreText } from "@/utils/caculateScore";
 

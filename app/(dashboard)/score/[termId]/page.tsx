@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { editScore, getScoreByTermId } from "../../lib/prisma/score";
 import toast from "react-hot-toast";
-import { ScoreStatus, Term } from "@prisma/client";
+import { ScoreStatus } from "@prisma/client";
 import { enumToGradeString } from "@/utils/caculateScore";
 import { getTermById } from "../../lib/prisma/term";
 interface Props {
@@ -16,15 +16,22 @@ function Page({ params }: Props) {
     const [isEditing, setIsEditing] = useState(false);
 
     const [score, setScore] = useState([] as any);
+
     const [term, setTerm] = useState({} as any);
+
     useEffect(() => {
         (async () => {
-            const score1 = await getScoreByTermId(termId);
-            const term1 = await getTermById(termId);
-            setScore([...score1]);
-            setTerm(term1 as any);
+            const allScore = await getScoreByTermId(termId);
+            setScore([...allScore]);
         })();
     }, [isEditing === false]);
+
+    useEffect(() => {
+        (async () => {
+            const currentTerm = await getTermById(termId);
+            setTerm(currentTerm as any);
+        })();
+    }, []);
 
     const save = async () => {
         const promise = [];
@@ -38,14 +45,13 @@ function Page({ params }: Props) {
             );
         }
         toast.promise(Promise.all(promise), {
-            loading: "Đang sửa...",
+            loading: "Đang lưu...",
             success: () => {
                 setIsEditing(false);
-
-                return "Sửa thành công";
+                return "Lưu thành công";
             },
             error: (error) => {
-                return "Sửa thất bại, vui lòng thử lại" + error;
+                return "Lưu thất bại, vui lòng thử lại" + error;
             },
         });
     };
@@ -58,14 +64,7 @@ function Page({ params }: Props) {
                 <div className="flex gap-4">
                     <button
                         className="btn btn-primary"
-                        onClick={() => {
-                            const isEdit = isEditing;
-                            if (!isEdit) {
-                                setIsEditing(true);
-                            } else {
-                                setIsEditing(false);
-                            }
-                        }}
+                        onClick={() => setIsEditing(!isEditing)}
                     >
                         {isEditing ? "Huỷ" : "Sửa"}
                     </button>

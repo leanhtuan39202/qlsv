@@ -28,9 +28,16 @@ interface Props {
 function ListTerm({ term }: Props) {
     const { data: session } = useSession();
 
-    const enrollment = async (termId: string) => {
+    const enrollment = async (termId: string, subjectId: string) => {
         const isFull = term.find((item) => item.id === termId)?.Enrollment
             .length;
+
+        const isEnrolled =
+            term.find((item) => item.id === termId)?.subject.id === subjectId;
+
+        if (isEnrolled) {
+            return toast.error("Đã đăng kí học phần tương tự rồi");
+        }
         if (isFull === 60) {
             return toast.error("Học phần đã đầy");
         }
@@ -86,7 +93,11 @@ function ListTerm({ term }: Props) {
                                                     session?.user?.name
                                             )
                                                 ? () => unEnrollment(item.id)
-                                                : () => enrollment(item.id)
+                                                : () =>
+                                                      enrollment(
+                                                          item.id,
+                                                          item.subjectId
+                                                      )
                                         }
                                     >
                                         {item.Enrollment.find(

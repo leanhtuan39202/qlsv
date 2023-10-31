@@ -3,21 +3,24 @@ import React, { useState, useEffect } from "react";
 import { getAllDepartments, deleteDepartment } from "../lib/prisma/department";
 import { Department } from "@prisma/client";
 import Link from "next/link";
-
 import { getTermByDepartmentId } from "../lib/prisma/term";
 
 function Page() {
     const [departments, setDepartments] = useState<Department[]>([]);
+
     const [selectedDepartment, setSelectedDepartment] = useState<string | null>(
         departments[0]?.id
     );
+
     const [term, setTerm] = useState([] as any);
+
     useEffect(() => {
         (async () => {
             const allDepartments = await getAllDepartments();
             setDepartments(allDepartments);
         })();
     }, []);
+
     useEffect(() => {
         (async () => {
             const allterm = await getTermByDepartmentId(
@@ -26,6 +29,7 @@ function Page() {
             setTerm(allterm as any);
         })();
     }, [deleteDepartment]);
+
     return (
         <div className="min-h-screen w-full p-6">
             <div className="bg-base-100">
@@ -40,8 +44,6 @@ function Page() {
                         onChange={(e) => {
                             setSelectedDepartment(e.target.value);
                         }}
-                        name=""
-                        id=""
                         className="select select-bordered mx-2"
                     >
                         {departments.map((department) => (
