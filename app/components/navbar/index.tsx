@@ -1,9 +1,22 @@
 "use client";
 import Link from "next/link";
-import React from "react";
-import { signOut } from "next-auth/react";
+import React, { useEffect } from "react";
+import { signOut, useSession } from "next-auth/react";
+import { getUserbyUsername } from "@/app/(dashboard)/lib/prisma/user";
 
 function Navbar() {
+    const [user, setUser] = React.useState<any>();
+
+    const { data: session } = useSession();
+
+    useEffect(() => {
+        (async () => {
+            const getUser = await getUserbyUsername(
+                session?.user?.name as string
+            );
+            setUser(getUser);
+        })();
+    }, [session?.user?.name]);
     return (
         <div className="navbar bg-secondary backdrop-blur-sm sticky top-0 bg-opacity-90 z-10 transition-all duration-100 shadow-lg">
             <div className="flex-1">
@@ -32,7 +45,11 @@ function Navbar() {
                     {"Trang chủ"}
                 </Link>
             </div>
-            <div className="flex-none gap-2">
+            <div
+                className={`${
+                    user?.role === "ADMIN" ? "flex-none gap-2" : "hidden"
+                }`}
+            >
                 <div className="dropdown dropdown-end">
                     <label
                         tabIndex={0}
@@ -48,12 +65,6 @@ function Navbar() {
                         tabIndex={0}
                         className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
                     >
-                        <li>
-                            <Link href={"/"} className="justify-between">
-                                Profile
-                                <span className="badge">New</span>
-                            </Link>
-                        </li>
                         <li>
                             <Link href={"/setting"}>Settings</Link>
                         </li>

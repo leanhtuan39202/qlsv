@@ -24,7 +24,7 @@ const caculateScore10 = (CC: number, Midterm: number, Final: number) => {
     return +(CC * 0.1 + Midterm * 0.3 + Final * 0.6).toFixed(1);
 }
 
-const caculateScoreText = (score: number) => {
+const caculateScoreText = (score: number): ScoreText => {
     if (score >= 8.5 && score <= 10) {
         return ScoreText.A;
     } else if (score >= 7.8 && score <= 8.4) {
@@ -62,7 +62,7 @@ const enumToGradeString = (scoreText: ScoreText) => {
         case ScoreText.F:
             return 'F';
         default:
-            return 'Invalid Score';
+            return '';
     }
 }
 function classifyStudent(score4: number) {

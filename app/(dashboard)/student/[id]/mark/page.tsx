@@ -1,13 +1,17 @@
 import { getScoreByStudentId } from "@/app/(dashboard)/lib/prisma/score";
-import { authOption } from "@/app/api/auth/[...nextauth]/option";
 import { classifyStudent, enumToGradeString } from "@/utils/caculateScore";
 import { ScoreStatus } from "@prisma/client";
-import { getServerSession } from "next-auth";
 import React from "react";
 
-async function Page() {
-    const session = (await getServerSession(authOption as any)) as any;
-    const allScore = await getScoreByStudentId(session?.user?.name as string);
+interface Props {
+    params: {
+        id: string;
+    };
+}
+async function Page({ params }: Props) {
+    const { id: studentId } = params;
+
+    const allScore = await getScoreByStudentId(studentId);
 
     const score10 = (
         allScore.reduce((a, b) => a + b.term.subject.credit * b.Total10!, 0) /
@@ -70,9 +74,7 @@ async function Page() {
                                 <td>
                                     {score.status === ScoreStatus.PASSED
                                         ? "Đạt"
-                                        : score.status === ScoreStatus.FAILED
-                                        ? "Không đạt"
-                                        : ""}
+                                        : "Không đạt"}
                                 </td>
                             </tr>
                         ))}
@@ -86,8 +88,12 @@ async function Page() {
                     <p>Số tín chỉ nợ: {failCredit}</p>
                 </div>
                 <div className="space-y-4">
-                    <p>Điểm hệ 10: {score10}</p>
-                    <p>Điểm hệ 4: {score4} </p>
+                    <p>
+                        Điểm hệ 10: {Number.isNaN(+score10) ? "0.00" : +score10}
+                    </p>
+                    <p>
+                        Điểm hệ 4: {Number.isNaN(+score4) ? "0.00" : +score4}{" "}
+                    </p>
                     <p>Xếp loại học tập: {classifyStudent(+score4)} </p>
                 </div>
             </div>

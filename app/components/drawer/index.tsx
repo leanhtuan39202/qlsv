@@ -33,11 +33,15 @@ const menu = [
         href: "/subject",
     },
     {
+        label: "Quản lý học phần",
+        href: "/term    ",
+    },
+    {
         label: "Quản lý điểm",
         href: "/score",
     },
     {
-        label: "Quản lý lớp",
+        label: "Quản lý lớp học",
         href: "/classes",
     },
     {

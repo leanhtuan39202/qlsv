@@ -3,7 +3,8 @@ import React from "react";
 import { getStudentById } from "../(dashboard)/lib/prisma/student";
 import { authOption } from "../api/auth/[...nextauth]/option";
 import Link from "next/link";
-import { BarChart, PenSquare, UserCircle2 } from "lucide-react";
+import { BarChart, LockKeyhole, PenSquare, UserCircle2 } from "lucide-react";
+import Logout from "./logout";
 
 async function Page() {
     const session = (await getServerSession(authOption as any)) as any;
@@ -59,7 +60,7 @@ async function Page() {
                     </div>
                 </div>
             </div>
-            <div className="w-full flex gap-8 p-4">
+            <div className="w-full flex gap-8 p-4 flex-wrap">
                 <Link
                     href={"/studentpage/info"}
                     className="card w-96 bg-base-200 shadow-xl"
@@ -93,6 +94,18 @@ async function Page() {
                         <h2 className="card-title">Xem điểm</h2>
                     </div>
                 </Link>
+                <Link
+                    href={"studentpage/password"}
+                    className="card w-96 bg-base-200 shadow-xl"
+                >
+                    <figure className="px-10 pt-10">
+                        <LockKeyhole size={48} color="hsl(var(--n))" />
+                    </figure>
+                    <div className="card-body items-center text-center">
+                        <h2 className="card-title">Đổi Mật khẩu</h2>
+                    </div>
+                </Link>
+                <Logout />
             </div>
         </div>
     );

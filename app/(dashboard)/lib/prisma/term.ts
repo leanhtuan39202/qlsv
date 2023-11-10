@@ -1,10 +1,25 @@
 'use server'
 import { revalidatePath } from "next/cache";
 import prisma from ".";
+import { Term } from "@prisma/client";
 
 const getAllTerm = async () => {
     const term = await prisma.term.findMany();
     return term;
+}
+
+const getAllTermInfo = async () => {
+    const term = await prisma.term.findMany({
+        include: {
+            subject: {
+                include: {
+                    department: true
+                }
+            },
+            instructor: true
+        }
+    })
+    return term
 }
 const getTermById = async (id: string) => {
     const term = await prisma.term.findUnique({
@@ -48,7 +63,13 @@ const getTermByDepartmentId = async (departmentId: string) => {
     })
     return term
 }
-
+const createTerm = async (data: Term) => {
+    await prisma.term.create({
+        data: {
+            ...data
+        }
+    })
+}
 const enroll = async (termId: string, studentId: string) => {
     await prisma.enrollment.create({
         data: {
@@ -82,4 +103,4 @@ const unEnroll = async (termId: string, studentId: string) => {
     })
     revalidatePath("/studentpage/term");
 }
-export { getAllTerm, getTermById, getTermByDepartmentId, enroll, unEnroll }
+export { getAllTerm, getTermById, getTermByDepartmentId, enroll, unEnroll, createTerm, getAllTermInfo }

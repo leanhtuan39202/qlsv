@@ -1,6 +1,5 @@
 import Link from "next/link";
 import React from "react";
-import Tab from "./[id]/components/tab";
 
 function SpecializedLayout({ children }: { children: React.ReactNode }) {
     return (
@@ -11,7 +10,7 @@ function SpecializedLayout({ children }: { children: React.ReactNode }) {
                         <Link href={"/"}>Trang chủ</Link>
                     </li>
                     <li>
-                        <Link href={"/student/"}>Sinh viên</Link>
+                        <Link href={"/subject/"}>Học phần</Link>
                     </li>
                 </ul>
             </div>

@@ -67,6 +67,11 @@ enum Role {
     ADMIN
 }
 
+enum TermStatus {
+    OPEN
+    CLOSED
+}
+
 model Classes {
     id             String       @id
     name           String
@@ -104,6 +109,8 @@ model Term {
     instructorId String?
     instructor   Instructor?  @relation(fields: [instructorId], references: [id], onDelete: SetNull, onUpdate: Cascade)
     Enrollment   Enrollment[]
+    status       TermStatus
+    maxStudent   Int          @default(60)
 }
 
 model Score {

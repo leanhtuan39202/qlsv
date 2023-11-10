@@ -3,6 +3,7 @@ import React from "react";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { enroll, unEnroll } from "@/app/(dashboard)/lib/prisma/term";
+
 interface Props {
     term: ({
         Enrollment: {
@@ -23,26 +24,27 @@ interface Props {
         name: string;
         subjectId: string;
         instructorId: string | null;
+        maxStudent: number;
     })[];
 }
 function ListTerm({ term }: Props) {
     const { data: session } = useSession();
 
-    const enrollment = async (termId: string, subjectId: string) => {
-        const isFull = term.find((item) => item.id === termId)?.Enrollment
-            .length;
+    const enrollment = async (term: any) => {
+        const isFull = term.Enrollment.length;
 
-        const isEnrolled =
-            term.find((item) => item.id === termId)?.subject.id === subjectId;
+        const isEnrolled = term.Enrollment.find(
+            (item: any) => item.studentId === session?.user?.name
+        );
 
         if (isEnrolled) {
             return toast.error("Đã đăng kí học phần tương tự rồi");
         }
-        if (isFull === 60) {
+        if (isFull === term.maxStudent) {
             return toast.error("Học phần đã đầy");
         }
 
-        toast.promise(enroll(termId, session?.user?.name as string), {
+        toast.promise(enroll(term.id, session?.user?.name as string), {
             loading: "Đang đăng kí",
             success: "Đăng kí thành công",
             error: "Đăng ký thất bại",
@@ -81,7 +83,9 @@ function ListTerm({ term }: Props) {
                                 <td>{item.name}</td>
                                 <td>{item.instructor?.fullname}</td>
                                 <td>{item.subject.credit}</td>
-                                <td>{item.Enrollment.length} / 60</td>
+                                <td>
+                                    {item.Enrollment.length} / {item.maxStudent}
+                                </td>
                                 <td className="text-primary">Mở lớp</td>
                                 <td>
                                     <button
@@ -93,11 +97,7 @@ function ListTerm({ term }: Props) {
                                                     session?.user?.name
                                             )
                                                 ? () => unEnrollment(item.id)
-                                                : () =>
-                                                      enrollment(
-                                                          item.id,
-                                                          item.subjectId
-                                                      )
+                                                : () => enrollment(item)
                                         }
                                     >
                                         {item.Enrollment.find(
