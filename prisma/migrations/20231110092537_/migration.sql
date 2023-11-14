@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE `term` ADD COLUMN `maxStudent` INTEGER NOT NULL DEFAULT 60;
