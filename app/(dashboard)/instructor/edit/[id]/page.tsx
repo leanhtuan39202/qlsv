@@ -72,6 +72,7 @@ function Page({ params }: Props) {
             birth: new Date(),
             department: null,
             Classes: null,
+            user_id: "",
         },
         validationSchema: formikSchema,
         onSubmit: (value: instructorMixed) => {
