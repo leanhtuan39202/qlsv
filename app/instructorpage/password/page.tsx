@@ -96,7 +96,7 @@ function Page() {
                         className="btn btn-primary"
                     />
                     <Link
-                        href={"/studentpage"}
+                        href={"/instructorpage"}
                         className={"btn btn-secondary mx-4"}
                     >
                         Quay lại

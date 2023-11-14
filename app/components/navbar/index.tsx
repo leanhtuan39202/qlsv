@@ -5,18 +5,22 @@ import { signOut, useSession } from "next-auth/react";
 import { getUserbyUsername } from "@/app/(dashboard)/lib/prisma/user";
 
 function Navbar() {
-    const [user, setUser] = React.useState<any>();
+    const [user, setUser] = React.useState<any>({});
 
     const { data: session } = useSession();
 
     useEffect(() => {
         (async () => {
-            const getUser = await getUserbyUsername(
-                session?.user?.name as string
-            );
-            setUser(getUser);
+            if (!session) {
+                return;
+            } else {
+                const getUser = await getUserbyUsername(
+                    session?.user?.name as string
+                );
+                setUser(getUser);
+            }
         })();
-    }, [session?.user?.name]);
+    }, [session]);
     return (
         <div className="navbar bg-secondary backdrop-blur-sm sticky top-0 bg-opacity-90 z-10 transition-all duration-100 shadow-lg">
             <div className="flex-1">

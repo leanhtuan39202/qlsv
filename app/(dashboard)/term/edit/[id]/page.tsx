@@ -1,15 +1,14 @@
 "use client";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { Department, Subject } from "@prisma/client";
+import { Instructor, Subject, Term, TermStatus } from "@prisma/client";
 import toast from "react-hot-toast";
-import {
-    getSubjectById,
-    updateSubject,
-} from "@/app/(dashboard)/lib/prisma/subject";
-import { getAllDepartments } from "@/app/(dashboard)/lib/prisma/department";
+import { getTermById, updateTerm } from "@/app/(dashboard)/lib/prisma/term";
+
+import { getAllSubjects } from "@/app/(dashboard)/lib/prisma/subject";
+import { getAllIntructor } from "@/app/(dashboard)/lib/prisma/instructor";
 
 interface Props {
     params: {
@@ -17,32 +16,29 @@ interface Props {
     };
 }
 function Page({ params }: Props) {
-    const { id } = params;
-    async function update(value: Subject) {
-        const { id, name, departmentId, credit } = value;
-        await updateSubject({
-            id,
-            name,
-            credit,
-            departmentId,
+    async function update(value: Term) {
+        await updateTerm({
+            ...value,
+            maxStudent: Number(value.maxStudent),
         });
     }
-    const formikSchema = Yup.object<Subject>({
-        id: Yup.string().required("Vui lòng nhập mã môn học"),
-        name: Yup.string().required("Vui lòng nhập tên môn học"),
-        credit: Yup.number()
-            .required("Vui lòng nhập số tín chỉ")
-            .min(1, "Số tín chỉ không đc nhỏ hơn 1")
-            .max(9, "Số tín chỉ không đc lớn hơn 9")
-            .typeError("Số tín chỉ phải là số"),
-        departmentId: Yup.string().required("Vui lòng chọn khoa"),
+    const formikSchema = Yup.object<Term>({
+        id: Yup.string().required("Vui lòng nhập mã học phần"),
+        name: Yup.string().required("Vui lòng nhập tên học phần"),
+        instructorId: Yup.string().required("Vui lòng chọn giảng viên"),
+        subjectId: Yup.string().required("Vui lòng chọn môn học"),
+        maxStudent: Yup.number()
+            .required("Vui lòng nhập số lượng sinh viên")
+            .min(1, "Số lượng phải lớn hơn 0"),
     });
-    const formik = useFormik<Subject>({
+    const formik = useFormik<Term>({
         initialValues: {
             id: "",
             name: "",
-            credit: 1,
-            departmentId: "",
+            instructorId: "",
+            subjectId: "",
+            status: TermStatus.OPEN,
+            maxStudent: 0,
         },
         validationSchema: formikSchema,
         onSubmit: (value) => {
@@ -52,34 +48,41 @@ function Page({ params }: Props) {
                 success: () => {
                     return "Sửa thành công";
                 },
-                error: "Sửa thất bại có lỗi xảy ra",
+                error: (error) => {
+                    return "Sửa thất bại, vui lòng thử lại" + error;
+                },
             });
         },
     });
-    const [department, setDepartment] = React.useState([] as Department[]);
 
-    const [currentSubject, setCurrentSubject] = React.useState<
-        Subject & { department?: Department }
-    >();
+    const [instructorList, setInstructorList] = useState<Instructor[]>([]);
+
+    const [subjectList, setSubjectList] = useState<Subject[]>([]);
 
     useEffect(() => {
         (async () => {
-            const allDepartment = await getAllDepartments();
-            const currentSubject = await getSubjectById(id);
-            setCurrentSubject(
-                currentSubject as Subject & {
-                    department?: Department;
-                }
-            );
-            formik.setValues(currentSubject as Subject);
+            const [getInstructor, getSubject, currentTerm] = await Promise.all([
+                getAllIntructor(),
+                getAllSubjects(),
+                getTermById(params.id),
+            ]);
+            setInstructorList(getInstructor);
+            setSubjectList(getSubject);
 
-            setDepartment(allDepartment);
+            formik.setValues({
+                id: currentTerm?.id || "",
+                name: currentTerm?.name || "",
+                instructorId: currentTerm?.instructorId || "",
+                subjectId: currentTerm?.subjectId || "",
+                status: currentTerm?.status || TermStatus.OPEN,
+                maxStudent: currentTerm?.maxStudent || 0,
+            });
         })();
     }, []);
     return (
         <div className="min-h-screen w-full p-6">
             <div className="my-8">
-                <span className="font-bold text-2xl">Thêm mới môn học</span>
+                <span className="font-bold text-2xl">Sửa học phần</span>
             </div>
             <form
                 onSubmit={formik.handleSubmit}
@@ -88,14 +91,14 @@ function Page({ params }: Props) {
                 <div className="max-w-md w-full">
                     <div className="form-control">
                         <label htmlFor="name" className="p-2">
-                            Mã môn học
+                            Mã học phần
                         </label>
                         <input
                             value={formik.values.id}
                             onChange={formik.handleChange}
                             name="id"
-                            type="text"
                             disabled
+                            type="text"
                             className="input input-bordered w-full max-w-sm"
                         />
                         <p>
@@ -106,7 +109,7 @@ function Page({ params }: Props) {
                     </div>
                     <div className="form-control">
                         <label htmlFor="name" className="p-2">
-                            Tên môn học
+                            Tên học phần
                         </label>
                         <input
                             value={formik.values.name}
@@ -121,30 +124,33 @@ function Page({ params }: Props) {
                             </span>
                         </p>
                     </div>
+                    <div className="form-control">
+                        <label htmlFor="name" className="p-2">
+                            Sĩ số tối đa
+                        </label>
+                        <input
+                            value={formik.values.maxStudent}
+                            onChange={formik.handleChange}
+                            type="text"
+                            name="maxStudent"
+                            className="input input-bordered w-full max-w-sm"
+                        />
+                        <p>
+                            <span className="text-error">
+                                {formik.errors.maxStudent}
+                            </span>
+                        </p>
+                    </div>
 
-                    <div className="form-control mt-8 flex flex-row gap-4 justify-between max-w-xs">
+                    <div className="form-control mt-8 flex flex-row gap-4  max-w-xs">
                         <input
                             type="submit"
                             className="btn btn-primary"
                             value={"Sửa"}
                         />
-                        <input
-                            type="reset"
-                            className="btn btn-secondary"
-                            value={"Xoá hết"}
-                            onClick={() => {
-                                formik.resetForm({
-                                    values: {
-                                        id: currentSubject?.id ?? "",
-                                        name: "",
-                                        credit: 1,
-                                        departmentId: "",
-                                    },
-                                });
-                            }}
-                        />
+
                         <Link
-                            href={"/subject"}
+                            href={"/term"}
                             type="submit"
                             className="btn btn-accent"
                         >
@@ -155,48 +161,73 @@ function Page({ params }: Props) {
                 <div className=" w-full">
                     <div className="form-control">
                         <label htmlFor="name" className="p-2">
-                            Số tín chỉ
-                        </label>
-                        <input
-                            value={formik.values.credit}
-                            onChange={formik.handleChange}
-                            type="text"
-                            name="credit"
-                            className="input input-bordered w-full max-w-md"
-                        />
-                        <p>
-                            <span className="text-error">
-                                {formik.errors.credit}
-                            </span>
-                        </p>
-                    </div>
-                    <div className="form-control">
-                        <label htmlFor="name" className="p-2">
-                            Thuộc khoa
+                            Môn học
                         </label>
                         <select
+                            value={formik.values.subjectId || "Chọn Môn học"}
                             onChange={formik.handleChange}
-                            name="departmentId"
-                            defaultValue={""}
+                            name="subjectId"
+                            defaultValue={"chọn môn học"}
                             className="select select-bordered w-full max-w-md"
                         >
-                            <option value="">Chọn khoa</option>
-                            {department.map((department) => (
-                                <option
-                                    selected={
-                                        currentSubject?.department?.id ===
-                                        department.id
-                                    }
-                                    value={department.id}
-                                    key={department.id}
-                                >
-                                    {department.name}
+                            <option value={"chọn môn học"}>Chọn môn học</option>
+                            {subjectList?.map((i) => (
+                                <option value={i.id} key={i.id}>
+                                    {i.id} - {i.name}
                                 </option>
                             ))}
                         </select>
                         <p>
                             <span className="text-error">
-                                {formik.errors.departmentId}
+                                {formik.errors.instructorId}
+                            </span>
+                        </p>
+                    </div>
+                    <div className="form-control">
+                        <label htmlFor="name" className="p-2">
+                            Giảng viên
+                        </label>
+                        <select
+                            value={
+                                formik.values.instructorId || "Chọn giảng viên"
+                            }
+                            onChange={formik.handleChange}
+                            name="instructorId"
+                            defaultValue={"chọn giảng viên"}
+                            className="select select-bordered w-full max-w-md"
+                        >
+                            <option value={"chọn giảng viên"}>
+                                Chọn Giảng viên hướng dẫn
+                            </option>
+                            {instructorList?.map((i) => (
+                                <option value={i.id} key={i.id}>
+                                    {i.id} - {i.fullname}
+                                </option>
+                            ))}
+                        </select>
+                        <p>
+                            <span className="text-error">
+                                {formik.errors.instructorId}
+                            </span>
+                        </p>
+                    </div>
+                    <div className="form-control">
+                        <label htmlFor="name" className="p-2">
+                            Trạng thái
+                        </label>
+                        <select
+                            value={formik.values.status || 0}
+                            onChange={formik.handleChange}
+                            name="status"
+                            defaultValue={0}
+                            className="select select-bordered w-full max-w-md"
+                        >
+                            <option value={TermStatus.OPEN}>Mở</option>
+                            <option value={TermStatus.CLOSED}>Đóng</option>
+                        </select>
+                        <p>
+                            <span className="text-error">
+                                {formik.errors.status}
                             </span>
                         </p>
                     </div>

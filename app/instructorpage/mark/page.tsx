@@ -1,105 +1,69 @@
-import { getScoreByStudentId } from "@/app/(dashboard)/lib/prisma/score";
-import { authOption } from "@/app/api/auth/[...nextauth]/option";
-import { classifyStudent, enumToGradeString } from "@/utils/caculateScore";
-import { ScoreStatus } from "@prisma/client";
-import { getServerSession } from "next-auth";
-import React from "react";
+"use client";
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { getTermByInstructorId } from "@/app/(dashboard)/lib/prisma/term";
+import { useSession } from "next-auth/react";
 
-async function Page() {
-    const session = (await getServerSession(authOption as any)) as any;
-    const allScore = await getScoreByStudentId(session?.user?.name as string);
+function Page() {
+    const { data: session } = useSession();
 
-    const score10 = (
-        allScore.reduce((a, b) => a + b.term.subject.credit * b.Total10!, 0) /
-        allScore?.reduce((a, b) => a + b.term.subject.credit, 0)
-    ).toFixed(2);
+    const [term, setTerm] = useState([] as any);
 
-    const score4 = (
-        allScore.reduce((a, b) => a + b.term.subject.credit * b.Total4!, 0) /
-        allScore?.reduce((a, b) => a + b.term.subject.credit, 0)
-    ).toFixed(2);
-
-    const totalCredit = allScore?.reduce(
-        (a, b) => a + b.term.subject.credit,
-        0
-    );
-
-    const passCredit = allScore
-        ?.filter((s) => s.status === ScoreStatus.PASSED)
-        .reduce((a, b) => a + b.term.subject.credit, 0);
-
-    const failCredit = allScore
-        ?.filter((s) => s.status === ScoreStatus.FAILED)
-        .reduce((a, b) => a + b.term.subject.credit, 0);
+    useEffect(() => {
+        (async () => {
+            const allterm = await getTermByInstructorId(
+                session?.user?.name as string
+            );
+            setTerm(allterm as any);
+        })();
+    }, [session]);
 
     return (
-        <div className="flex flex-col  w-full min-h-screen relative">
-            <h1 className="text-2xl font-bold p-6">Kết quả học tập</h1>
+        <div className="min-h-screen w-full p-6">
+            <div className="bg-base-100">
+                <div className="flex justify-between items-center">
+                    <div className="my-8 flex ">
+                        <span className="font-bold text-2xl">Quản lý điểm</span>
+                    </div>
+                    <Link
+                        href={`/instructorpage/`}
+                        className="btn btn-primary btn-sm"
+                    >
+                        Quay lại
+                    </Link>
+                </div>
+            </div>
             <div className="overflow-x-auto">
-                <table className="table table-lg mt-8">
+                <table className="table mt-8 table-lg">
                     <thead>
                         <tr>
                             <th>STT</th>
                             <th>Mã lớp học phần</th>
-                            <th>Tên môn học</th>
-                            <th>Tín chỉ</th>
-                            <th>chuyên cần</th>
-                            <th>Giữa kì</th>
-                            <th>Cuối kì</th>
-                            <th>Điểm tổng kết</th>
-                            <th>Thang điểm 4</th>
-                            <th>Điểm chữ</th>
-                            <th>Trạng thái</th>
+                            <th>Tên lớp học phần</th>
+                            <th>Số tín chỉ</th>
+                            <th>Sĩ số lớp</th>
+                            <th>Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {allScore?.map((score, index) => (
-                            <tr key={index}>
-                                <th>{index + 1}</th>
-                                <td>{score.term.id}</td>
-                                <td>{score.term.name}</td>
-                                <td>{score.term.subject.credit}</td>
-                                <td>{score.CC}</td>
-                                <td>{score.Midterm}</td>
-                                <td>{score.Final}</td>
-                                <td>{score.Total10}</td>
-                                <td>{score.Total4}</td>
+                        {term.map((term: any, index: number) => (
+                            <tr key={term.id}>
+                                <td>{index + 1}</td>
+                                <td>{term.id}</td>
+                                <td>{term.name}</td>
+                                <td>{term.subject.credit}</td>
+                                <td>{term.Enrollment.length}</td>
                                 <td>
-                                    {enumToGradeString(score.ScoreText as any)}
-                                </td>
-                                <td>
-                                    {score.status === ScoreStatus.PASSED
-                                        ? "Đạt"
-                                        : score.status === ScoreStatus.FAILED
-                                        ? "Không đạt"
-                                        : ""}
+                                    <Link
+                                        href={`/instructorpage/mark/${term.id}`}
+                                    >
+                                        Xem
+                                    </Link>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
-            </div>
-            <div className="bg-base-200 p-4 h-32 absolute bottom-20 rounded-md w-full flex flex-row gap-40">
-                <div className="space-y-4">
-                    <p>Số tín chỉ đã đăng kí: {totalCredit}</p>
-                    <p>Số tín chỉ đạt: {passCredit}</p>
-                    <p>Số tín chỉ nợ: {failCredit}</p>
-                </div>
-                <div className="space-y-4">
-                    <p>
-                        Điểm hệ 10:{" "}
-                        {Number.isNaN(+score10)
-                            ? "0.00"
-                            : Number(score10).toFixed(2)}
-                    </p>
-                    <p>
-                        Điểm hệ 4:{" "}
-                        {Number.isNaN(+score4)
-                            ? "0.00"
-                            : Number(score4).toFixed(2)}
-                    </p>
-                    <p>Xếp loại học tập: {classifyStudent(+score4)} </p>
-                </div>
             </div>
         </div>
     );

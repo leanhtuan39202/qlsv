@@ -2,7 +2,7 @@ import Image, { StaticImageData } from "next/image";
 import TopStudent from "../components/chart/topStudent";
 import StudentStatus from "../components/chart/studentStatus";
 import GenderChart from "../components/chart/gender";
-import ClassficationChart from "../components/chart/classficationChart";
+// import ClassficationChart from "../components/chart/classficationChart";
 import Link from "next/link";
 import { getAllStudents } from "../(dashboard)/lib/prisma/student";
 import { getAllDepartments } from "../(dashboard)/lib/prisma/department";
@@ -107,7 +107,7 @@ export default async function Home() {
             <div className="flex flex-row gap-8 flex-wrap mt-4">
                 <StudentStatus />
                 <GenderChart />
-                <ClassficationChart />
+                {/* <ClassficationChart /> */}
                 <TopStudent />
                 <InstructorLevel />
             </div>

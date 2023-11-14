@@ -28,7 +28,7 @@ function Page() {
             );
             setTerm(allterm as any);
         })();
-    }, [deleteDepartment]);
+    }, [selectedDepartment]);
 
     return (
         <div className="min-h-screen w-full p-6">

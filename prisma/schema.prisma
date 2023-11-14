@@ -176,7 +176,7 @@ model User {
 model StudentInfo {
     id                   String   @id
     birth                DateTime
-    phone                String
+    phone                String   @unique
     Student              Student  @relation(fields: [student_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
     student_id           String   @unique
     status               Status   @default(STUDYING)
@@ -189,8 +189,8 @@ model StudentInfo {
     fatherName           String
     motherName           String
     identificationNumber String   @unique
-    fatherPhone          String?
-    motherPhone          String?
+    fatherPhone          String?  @unique
+    motherPhone          String?  @unique
     motherWork           String?
     fatherWork           String?
     placeOfBirth         String
