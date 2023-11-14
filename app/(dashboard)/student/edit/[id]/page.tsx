@@ -129,6 +129,7 @@ function Page({ params }: Props) {
                 schoolyear_id: null,
                 specialized_id: null,
                 class_id: null,
+                user_id: id,
             },
         },
         validationSchema: formikSchema,
