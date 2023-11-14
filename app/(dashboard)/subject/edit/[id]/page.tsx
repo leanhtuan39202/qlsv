@@ -79,7 +79,7 @@ function Page({ params }: Props) {
     return (
         <div className="min-h-screen w-full p-6">
             <div className="my-8">
-                <span className="font-bold text-2xl">Thêm mới môn học</span>
+                <span className="font-bold text-2xl">Sửa môn học</span>
             </div>
             <form
                 onSubmit={formik.handleSubmit}

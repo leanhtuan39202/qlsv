@@ -74,7 +74,9 @@ async function Page({ params }: Props) {
                                 <td>
                                     {score.status === ScoreStatus.PASSED
                                         ? "Đạt"
-                                        : "Không đạt"}
+                                        : score.status === ScoreStatus.FAILED
+                                        ? "Không đạt"
+                                        : ""}
                                 </td>
                             </tr>
                         ))}
@@ -89,10 +91,16 @@ async function Page({ params }: Props) {
                 </div>
                 <div className="space-y-4">
                     <p>
-                        Điểm hệ 10: {Number.isNaN(+score10) ? "0.00" : +score10}
+                        Điểm hệ 10:{" "}
+                        {Number.isNaN(+score10)
+                            ? "0.00"
+                            : Number(score10).toFixed(2)}
                     </p>
                     <p>
-                        Điểm hệ 4: {Number.isNaN(+score4) ? "0.00" : +score4}{" "}
+                        Điểm hệ 4:{" "}
+                        {Number.isNaN(+score4)
+                            ? "0.00"
+                            : Number(score4).toFixed(2)}
                     </p>
                     <p>Xếp loại học tập: {classifyStudent(+score4)} </p>
                 </div>

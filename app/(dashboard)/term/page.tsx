@@ -1,12 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Department, Subject } from "@prisma/client";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { AlertTriangle, FileSignature, PlusCircle, Trash2 } from "lucide-react";
 import { ColDef, ModuleRegistry } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
-import { deleteSubject, getAllSubjects } from "../lib/prisma/subject";
+import { deleteSubject } from "../lib/prisma/subject";
 import { SetFilterModule } from "@ag-grid-enterprise/set-filter";
 import { ExcelExportModule } from "@ag-grid-enterprise/excel-export";
 import { getAllTermInfo } from "../lib/prisma/term";
