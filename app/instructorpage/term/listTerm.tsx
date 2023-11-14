@@ -77,7 +77,7 @@ function ListTerm({ term }: Props) {
                     </thead>
                     <tbody>
                         {term.map((item, index) => (
-                            <tr>
+                            <tr key={item.id}>
                                 <th>{index + 1}</th>
                                 <td>{item.id}</td>
                                 <td>{item.name}</td>
