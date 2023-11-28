@@ -31,7 +31,12 @@ const getStudentById = async (id: string) => {
             classes: true,
             department: true,
             schoolyear: true,
-            specialized: true
+            specialized: true,
+            Enrollment: {
+                include: {
+                    term: true
+                }
+            }
         }
     })
     return student
@@ -99,9 +104,7 @@ const getTopStudent = async () => {
         include: {
             Student: true
         },
-        // orderBy: {
-        //     gpa4: 'desc'
-        // },
+
         take: 10
     })
     return top10

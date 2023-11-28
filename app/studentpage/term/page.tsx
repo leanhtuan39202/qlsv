@@ -14,7 +14,7 @@ async function Page() {
     return (
         <div className="w-full min-h-screen p-6 ">
             <h1 className="text-2xl font-bold">Đăng kí học phần</h1>
-            <ListTerm term={term} />
+            <ListTerm term={term} enrollInfo={studentInfo!.Enrollment} />
         </div>
     );
 }

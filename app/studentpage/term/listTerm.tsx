@@ -3,6 +3,7 @@ import React from "react";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { enroll, unEnroll } from "@/app/(dashboard)/lib/prisma/term";
+import { Term, TermStatus } from "@prisma/client";
 
 interface Props {
     term: ({
@@ -25,20 +26,31 @@ interface Props {
         subjectId: string;
         instructorId: string | null;
         maxStudent: number;
+        status: TermStatus;
     })[];
+    enrollInfo: {
+        studentId: string;
+        termId: string;
+        term: Term;
+    }[];
 }
-function ListTerm({ term }: Props) {
+function ListTerm({ term, enrollInfo }: Props) {
     const { data: session } = useSession();
 
     const enrollment = async (term: any) => {
         const isFull = term.Enrollment.length;
 
-        const isEnrolled = term.Enrollment.find(
-            (item: any) => item.studentId === session?.user?.name
+        const isEnrolled = enrollInfo.find(
+            (item) => item.term.subjectId === term.subject.id
         );
+
+        const isClosed = term.status === TermStatus.CLOSED;
 
         if (isEnrolled) {
             return toast.error("Đã đăng kí học phần tương tự rồi");
+        }
+        if (isClosed) {
+            return toast.error("Học phần đã đóng");
         }
         if (isFull === term.maxStudent) {
             return toast.error("Học phần đã đầy");
@@ -58,7 +70,6 @@ function ListTerm({ term }: Props) {
             error: "Huỷ kí thất bại",
         });
     };
-
     return (
         <div>
             <div className="overflow-x-auto">
@@ -86,7 +97,17 @@ function ListTerm({ term }: Props) {
                                 <td>
                                     {item.Enrollment.length} / {item.maxStudent}
                                 </td>
-                                <td className="text-primary">Mở lớp</td>
+                                <td
+                                    className={
+                                        item.status === TermStatus.OPEN
+                                            ? "text-success"
+                                            : "text-error"
+                                    }
+                                >
+                                    {item.status === TermStatus.OPEN
+                                        ? "Mở lớp"
+                                        : "Đã đóng"}
+                                </td>
                                 <td>
                                     <button
                                         className="btn btn-primary"
