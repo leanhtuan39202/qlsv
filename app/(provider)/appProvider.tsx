@@ -85,5 +85,7 @@ function AppProvider({ children }: IProps) {
 const useAppContext = () => {
     return React.useContext(AppContext);
 };
+
 export { useAppContext };
+
 export default AppProvider;

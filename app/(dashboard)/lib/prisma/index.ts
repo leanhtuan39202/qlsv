@@ -1,4 +1,5 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Role } from '@prisma/client'
+import { Md5 } from 'ts-md5'
 
 const prismaClientSingleton = () => {
     return new PrismaClient()
@@ -12,6 +13,23 @@ const globalForPrisma = globalThis as unknown as {
 
 const prisma = globalForPrisma.prisma ?? prismaClientSingleton()
 
+const main = async () => {
+    const user = await prisma.user.findUnique({
+        where: {
+            username: 'admin'
+        }
+    })
+    if (!user) {
+        await prisma.user.create({
+            data: {
+                username: 'admin',
+                password: Md5.hashStr('1111'),
+                role: Role.ADMIN
+            }
+        })
+    }
+}
+main()
 export default prisma
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
