@@ -70,14 +70,6 @@ const Drawer: React.FC<Props> = ({ children }) => {
                         href={"/"}
                         className="flex items-center text-lg uppercase font-bold"
                     >
-                        <Image
-                            alt="logo"
-                            priority
-                            width={64}
-                            height={64}
-                            className="object-contain"
-                            src={require("../../../public/image/vnualogo.png")}
-                        />
                         <div className="ml-4">
                             <span className="text-primary">Quản lý</span>{" "}
                             <span className="text-secondary">sinh viên</span>

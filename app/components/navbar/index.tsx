@@ -3,7 +3,7 @@ import Link from "next/link";
 import React, { useEffect } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { getUserbyUsername } from "@/app/(dashboard)/lib/prisma/user";
-
+import Image from "next/image";
 function Navbar() {
     const [user, setUser] = React.useState<any>({});
 
@@ -59,10 +59,13 @@ function Navbar() {
                         tabIndex={0}
                         className="btn btn-ghost btn-circle avatar"
                     >
-                        <img
-                            className="avatar rounded-full"
-                            src="https://media1.nguoiduatin.vn/dbvn/images/uploads/2022/11/17/the-thao/messi-khoc.jpg"
-                            alt=""
+                        <Image
+                            alt="logo"
+                            priority
+                            width={64}
+                            height={64}
+                            className="object-contain"
+                            src={require("../../../public/image/vnualogo.png")}
                         />
                     </label>
                     <ul

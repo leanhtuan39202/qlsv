@@ -1,9 +1,8 @@
 import { getServerSession } from "next-auth";
 import React from "react";
-import { getStudentById } from "../(dashboard)/lib/prisma/student";
 import { authOption } from "../api/auth/[...nextauth]/option";
 import Link from "next/link";
-import { BarChart, LockKeyhole, PenSquare, UserCircle2 } from "lucide-react";
+import { BarChart, LockKeyhole, UserCircle2 } from "lucide-react";
 import Logout from "./logout";
 import { getInstructorById } from "../(dashboard)/lib/prisma/instructor";
 
