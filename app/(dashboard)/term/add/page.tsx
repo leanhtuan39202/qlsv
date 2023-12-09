@@ -17,7 +17,7 @@ function Page() {
             instructorId,
             subjectId,
             status: TermStatus.OPEN,
-            maxStudent,
+            maxStudent:Number(maxStudent),
         });
     }
     const formikSchema = Yup.object<Term>({

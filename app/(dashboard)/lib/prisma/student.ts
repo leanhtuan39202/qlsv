@@ -59,9 +59,14 @@ const getStudentByIdToUpdate = async (id: string) => {
     }
 }
 const deleteStudent = async (id: string) => {
-    return await prisma.student.delete({
+    await prisma.student.delete({
         where: {
             id
+        }
+    })
+    await prisma.user.delete({
+        where: {
+            username:id
         }
     })
 }

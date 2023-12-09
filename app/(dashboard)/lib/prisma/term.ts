@@ -77,17 +77,23 @@ const getTermByDepartmentId = async (departmentId: string) => {
 }
 const createTerm = async (data: Term) => {
     await prisma.term.create({
-        data: {
-            ...data
-        }
+        data
     })
 }
+
 const updateTerm = async (data: Term) => {
     await prisma.term.update({
         where: {
             id: data.id
         },
         data
+    })
+}
+const deleteTerm = async(id:string)=>{
+    await prisma.term.delete({
+        where: {
+            id
+        },
     })
 }
 const enroll = async (termId: string, studentId: string) => {
@@ -123,4 +129,4 @@ const unEnroll = async (termId: string, studentId: string) => {
     })
     revalidatePath("/studentpage/term");
 }
-export { getAllTerm, getTermById, getTermByDepartmentId, enroll, unEnroll, createTerm, getAllTermInfo, getTermByInstructorId, updateTerm }
+export { getAllTerm, getTermById, getTermByDepartmentId, enroll, unEnroll, createTerm, getAllTermInfo, getTermByInstructorId, updateTerm,deleteTerm }
