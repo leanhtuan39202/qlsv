@@ -32,6 +32,7 @@ type classesMixed = ({
     Instructor: Instructor;
     schoolyear: SchoolYear;
 } & Classes)[];
+
 function Page() {
     const [classes, setClasses] = useState<classesMixed>([]);
     const [selectedClass, setSelectedClass] = useState<string | null>(null);

@@ -5,10 +5,9 @@ import Link from "next/link";
 import { AlertTriangle, FileSignature, PlusCircle, Trash2 } from "lucide-react";
 import { ColDef, ModuleRegistry } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
-import { deleteSubject } from "../lib/prisma/subject";
 import { SetFilterModule } from "@ag-grid-enterprise/set-filter";
 import { ExcelExportModule } from "@ag-grid-enterprise/excel-export";
-import { getAllTermInfo } from "../lib/prisma/term";
+import { deleteTerm, getAllTermInfo } from "../lib/prisma/term";
 
 ModuleRegistry.registerModules([SetFilterModule, ExcelExportModule]);
 function Page() {
@@ -22,7 +21,7 @@ function Page() {
     }, []);
 
     const handleDelete = async () => {
-        toast.promise(deleteSubject(selectedTerm as string), {
+        toast.promise(deleteTerm(selectedTerm as string), {
             loading: "Đang xoá...",
             success: () => {
                 setTerm(term.filter((t) => t.id !== setSelectedTerm));
@@ -52,6 +51,12 @@ function Page() {
         {
             field: "name",
             headerName: "Tên học phần",
+            floatingFilter: true,
+            filter: "text",
+        },
+        {
+            field: "maxStudent",
+            headerName: "Sĩ số tối đa",
             floatingFilter: true,
             filter: "text",
         },
@@ -86,6 +91,7 @@ function Page() {
                         </Link>
                         <button
                             onClick={() => {
+                                console.log('id',params.value);
                                 setSelectedTerm(params.value);
                                 modalRef?.current?.showModal();
                             }}

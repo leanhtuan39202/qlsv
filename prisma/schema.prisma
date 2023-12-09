@@ -143,7 +143,7 @@ model Instructor {
     Classes      Classes?
     Term         Term[]
     user_id      String      @unique
-    user         User?       @relation(fields: [user_id], references: [username])
+    user         User?       @relation(fields: [user_id], references: [username],onUpdate: Cascade, onDelete: Cascade)
 }
 
 model Student {
@@ -161,7 +161,7 @@ model Student {
     Score          Score[]
     StudentInfo    StudentInfo?
     user_id        String       @unique
-    user           User?        @relation(fields: [user_id], references: [username])
+    user           User?        @relation(fields: [user_id], references: [username],onUpdate: Cascade, onDelete: Cascade)
     Enrollment     Enrollment[]
 }
 

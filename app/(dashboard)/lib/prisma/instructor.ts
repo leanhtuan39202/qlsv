@@ -42,6 +42,12 @@ const deleteInstructor = async (id: string) => {
             id
         }
     })
+    await prisma.user.delete({
+        where: {
+            username:id
+        }
+    })
+
 }
 
 const updateInstructor = async (instructor: Instructor) => {
