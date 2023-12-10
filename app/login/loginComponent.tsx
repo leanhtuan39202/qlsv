@@ -23,8 +23,7 @@ function LoginComponent() {
         e.preventDefault();
         toast.promise(signInHanle(), {
             loading: "Đang đăng nhập...",
-            success: (value) => {
-                console.log(value);
+            success: () => {
                 setTimeout(() => {
                     router.replace("/");
                 }, 500);
