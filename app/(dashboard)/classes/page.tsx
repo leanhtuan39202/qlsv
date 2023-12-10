@@ -68,9 +68,9 @@ function Page() {
             cellRenderer: (params: any) => {
                 return (
                     <div className="flex flex-col">
-                        <span>Sĩ số: {params.data.Student.length}</span>
+                        <span>Sĩ số: {params?.data?.Student?.length}</span>
                         <span>
-                            Niên khoá: {params.data.schoolyear.schoolyear}
+                            Niên khoá: {params?.data?.schoolyear?.schoolyear}
                         </span>
                         {params?.data.Instructor?.id && (
                             <span>
