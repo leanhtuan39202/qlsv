@@ -22,7 +22,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en" data-theme="cmyk">
+        <html lang="en" data-theme="lemonade">
             <meta name="theme-color" content="hsl(var(--p))" />
             <meta
                 name="viewport"

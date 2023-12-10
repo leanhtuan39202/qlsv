@@ -12,6 +12,7 @@ interface IProps {
     children: React.ReactNode;
 }
 export const AppContext = createContext<IAppContext>({} as IAppContext);
+
 function AppProvider({ children }: IProps) {
     const [loading, setLoading] = useState(false);
 
@@ -28,8 +29,8 @@ function AppProvider({ children }: IProps) {
             setTheme(currentTheme as string);
             document.documentElement?.setAttribute("data-theme", currentTheme);
         } else {
-            setTheme("cupcake");
-            document.documentElement?.setAttribute("data-theme", "cmyk");
+            setTheme("lemonade");
+            document.documentElement?.setAttribute("data-theme", "lemonade");
         }
         if (currentChartTheme) {
             setChartTheme(currentChartTheme);

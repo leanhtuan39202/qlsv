@@ -13,11 +13,8 @@ import {
     Trash2,
 } from "lucide-react";
 import { AgGridReact } from "ag-grid-react";
-import { ExcelExportModule } from "@ag-grid-enterprise/excel-export";
-import { ColDef, GridApi, ModuleRegistry } from "ag-grid-community";
+import { ColDef, GridApi } from "ag-grid-community";
 import { AppContext } from "@/app/(provider)/appProvider";
-
-ModuleRegistry.registerModules([ExcelExportModule]);
 
 function Page() {
     const [department, setDepartment] = useState([] as Department[]);
@@ -85,22 +82,9 @@ function Page() {
         setSelectedDepartment(null);
         modalRef.current?.close();
     };
-    const gridApiRef = React.useRef<GridApi<Department>>();
 
     const modalRef = React.useRef<any>(null);
-    const exportData = () => {
-        gridApiRef?.current?.exportDataAsExcel({
-            processCellCallback: (params) => {
-                if (params.column.getColDef().headerName == "Hành động") {
-                    params.value = null;
-                }
-                if (params.column.getColId() == "founding") {
-                    params.value = new Date(params.value).toLocaleDateString();
-                }
-                return params.value;
-            },
-        });
-    };
+
     const { theme } = useContext(AppContext);
 
     return (
@@ -114,15 +98,6 @@ function Page() {
                     <span className="font-bold text-2xl">
                         Danh sách tất cả các khoa
                     </span>
-                    <div>
-                        <button
-                            className="btn-outline btn btn-success"
-                            onClick={() => exportData()}
-                        >
-                            <Sheet size={20} />
-                            Export
-                        </button>
-                    </div>
                 </div>
 
                 <div
@@ -134,9 +109,6 @@ function Page() {
                 >
                     <div className="h-2/3">
                         <AgGridReact<Department>
-                            onGridReady={(params) => {
-                                gridApiRef.current = params.api;
-                            }}
                             defaultColDef={{
                                 flex: 1,
                                 sortable: true,

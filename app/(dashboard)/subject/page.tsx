@@ -8,9 +8,8 @@ import { ColDef, ModuleRegistry } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
 import { deleteSubject, getAllSubjects } from "../lib/prisma/subject";
 import { SetFilterModule } from "@ag-grid-enterprise/set-filter";
-import { ExcelExportModule } from "@ag-grid-enterprise/excel-export";
 
-ModuleRegistry.registerModules([SetFilterModule, ExcelExportModule]);
+ModuleRegistry.registerModules([SetFilterModule]);
 function Page() {
     const [subject, setSubject] = useState<
         ({
@@ -39,7 +38,6 @@ function Page() {
     };
 
     const modalRef = React.useRef<any>(null);
-    const gridApiRef = React.useRef<any>(null);
     const columnDefs: ColDef<any>[] = [
         {
             field: "id",
@@ -119,10 +117,6 @@ function Page() {
                                     debounceMs: 0,
                                 },
                             }}
-                            onGridReady={(gridApi) => {
-                                gridApiRef.current = gridApi.api;
-                            }}
-                            enableAdvancedFilter
                             animateRows
                             columnDefs={columnDefs}
                             rowData={subject}

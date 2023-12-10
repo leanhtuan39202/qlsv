@@ -19,12 +19,12 @@ import {
 } from "lucide-react";
 import { AgGridReact } from "ag-grid-react";
 import { ExcelExportModule } from "@ag-grid-enterprise/excel-export";
-import { ColDef, GridApi, ModuleRegistry } from "ag-grid-community";
+import { ColDef, ModuleRegistry } from "ag-grid-community";
 import { AppContext } from "@/app/(provider)/appProvider";
 import { deleteClass, getAllClasses } from "../lib/prisma/classes";
 import { SetFilterModule } from "ag-grid-enterprise";
 
-ModuleRegistry.registerModules([ExcelExportModule, SetFilterModule]);
+ModuleRegistry.registerModules([SetFilterModule]);
 
 type classesMixed = ({
     department: Department | null;
@@ -133,22 +133,9 @@ function Page() {
         setSelectedClass(null);
         modalRef.current?.close();
     };
-    const gridApiRef = React.useRef<GridApi<Department>>();
 
     const modalRef = React.useRef<any>(null);
-    const exportData = () => {
-        gridApiRef?.current?.exportDataAsExcel({
-            processCellCallback: (params) => {
-                if (params.column.getColDef().headerName == "Hành động") {
-                    params.value = null;
-                }
-                if (params.column.getColId() == "founding") {
-                    params.value = new Date(params.value).toLocaleDateString();
-                }
-                return params.value;
-            },
-        });
-    };
+
     const { theme } = useContext(AppContext);
 
     return (
@@ -162,15 +149,6 @@ function Page() {
                     <span className="font-bold text-2xl">
                         Danh sách tất cả các lớp học
                     </span>
-                    <div>
-                        <button
-                            className="btn-outline btn btn-success"
-                            onClick={exportData}
-                        >
-                            <Sheet size={20} />
-                            Export
-                        </button>
-                    </div>
                 </div>
 
                 <div
@@ -182,9 +160,6 @@ function Page() {
                 >
                     <div className="h-2/3">
                         <AgGridReact<any>
-                            onGridReady={(params) => {
-                                gridApiRef.current = params.api;
-                            }}
                             defaultColDef={{
                                 sortable: true,
                                 resizable: true,

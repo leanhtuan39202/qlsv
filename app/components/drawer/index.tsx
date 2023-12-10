@@ -71,7 +71,7 @@ const Drawer: React.FC<Props> = ({ children }) => {
                     >
                         <div className="ml-4">
                             <span className="text-primary">Quản lý</span>{" "}
-                            <span className="text-secondary">sinh viên</span>
+                            <span className="text-base-content">sinh viên</span>
                         </div>
                     </Link>
                 </div>

@@ -19,12 +19,12 @@ function Page() {
             setTerm(allTerm);
         })();
     }, []);
-
+    console.log(term);
     const handleDelete = async () => {
         toast.promise(deleteTerm(selectedTerm as string), {
             loading: "Đang xoá...",
             success: () => {
-                setTerm(term.filter((t) => t.id !== setSelectedTerm));
+                setTerm(term.filter((t) => t.id != selectedTerm));
                 setSelectedTerm(null);
                 modalRef.current?.close();
                 return "Xoá thành công";
@@ -34,7 +34,6 @@ function Page() {
     };
 
     const modalRef = React.useRef<any>(null);
-    const gridApiRef = React.useRef<any>(null);
     const columnDefs: ColDef<any>[] = [
         {
             field: "id",
@@ -46,7 +45,7 @@ function Page() {
             field: "subject.department.name",
             headerName: "Khoa",
             floatingFilter: true,
-            filter: "text",
+            filter: "set",
         },
         {
             field: "name",
@@ -63,11 +62,12 @@ function Page() {
         {
             field: "subject.credit",
             headerName: "Số tín chỉ",
-            floatingFilter: true,
         },
         {
             field: "instructor.fullname",
             headerName: "Giảng viên hướng dẫn",
+            floatingFilter: true,
+            filter: "text",
         },
         {
             field: "status",
@@ -91,7 +91,6 @@ function Page() {
                         </Link>
                         <button
                             onClick={() => {
-                                console.log('id',params.value);
                                 setSelectedTerm(params.value);
                                 modalRef?.current?.showModal();
                             }}
@@ -129,9 +128,6 @@ function Page() {
                                 filterParams: {
                                     debounceMs: 0,
                                 },
-                            }}
-                            onGridReady={(gridApi) => {
-                                gridApiRef.current = gridApi.api;
                             }}
                             enableAdvancedFilter
                             animateRows

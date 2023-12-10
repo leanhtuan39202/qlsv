@@ -2,6 +2,7 @@
 import React, { useContext } from "react";
 import { AppContext } from "@/app/(provider)/appProvider";
 import Chart from "react-apexcharts";
+import Link from "next/link";
 
 function Page() {
     const themeList = [
@@ -44,6 +45,10 @@ function Page() {
         {
             name: "Dark",
             value: "dark",
+        },
+        {
+            name: "Vnua",
+            value: "lemonade",
         },
     ];
     const chartStyles = [
@@ -188,6 +193,12 @@ function Page() {
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div className="space-y-4 w-full mt-6">
+                <Link href="/setting/password" className="btn btn-primary ">
+                    Đổi mật khẩu
+                </Link>
             </div>
         </div>
     );
