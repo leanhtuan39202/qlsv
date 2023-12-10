@@ -12,7 +12,7 @@ interface Props {
 }
 function ClassInfoScreen({ classes }: Props) {
     const [columnDefs] = useState<ColDef<any>[]>([
-        { field: "id", headerName: "Mã sinh viên" },
+        { field: "id", headerName: "Mã sinh viên", filter: "text" },
         {
             field: "fullname",
             headerName: "Tên sinh viên",
@@ -21,7 +21,7 @@ function ClassInfoScreen({ classes }: Props) {
         {
             field: "address",
             headerName: "Địa chỉ",
-            floatingFilter: false,
+            filter: "text",
         },
     ]);
     const gridApiRef = React.useRef<GridApi<any>>();

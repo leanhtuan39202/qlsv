@@ -84,7 +84,7 @@ function LoginComponent() {
                                 name="password"
                                 type="password"
                                 autoComplete="current-password"
-                                className="input input-bordered w-full input-lg"
+                                className="input input-bordered w-full input-lg form-control"
                             />
                         </div>
                     </div>

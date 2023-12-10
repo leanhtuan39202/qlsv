@@ -17,7 +17,7 @@ function Page() {
             instructorId,
             subjectId,
             status: TermStatus.OPEN,
-            maxStudent:Number(maxStudent),
+            maxStudent: Number(maxStudent),
         });
     }
     const formikSchema = Yup.object<Term>({
@@ -190,7 +190,7 @@ function Page() {
                         </select>
                         <p>
                             <span className="text-error">
-                                {formik.errors.instructorId}
+                                {formik.errors.subjectId}
                             </span>
                         </p>
                     </div>
