@@ -51,7 +51,7 @@ function Page() {
                 modalRef.current?.close();
                 return "Xoá thành công";
             },
-            error: "Xoá thất bại",
+            error: err => err,
         });
     };
 

@@ -201,6 +201,5 @@ model Enrollment {
     termId    String
     student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     term      Term    @relation(fields: [termId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
     @@id([studentId, termId])
 }
