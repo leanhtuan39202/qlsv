@@ -6,6 +6,7 @@ import { ScoreStatus } from "@prisma/client";
 import { enumToGradeString } from "@/utils/caculateScore";
 import { getTermById } from "../../lib/prisma/term";
 import * as xlsx from "xlsx";
+import Link from "next/link";
 interface Props {
     params: {
         termId: string;
@@ -97,6 +98,13 @@ function Page({ params }: Props) {
                     <button className="btn btn-accent" onClick={handleExport}>
                         export
                     </button>
+                    <Link
+                        href={"/score"}
+                        className="btn btn-accent"
+                        onClick={handleExport}
+                    >
+                        Quay lại
+                    </Link>
                 </div>
             </div>
             <div className="flex space-y-4 flex-col">

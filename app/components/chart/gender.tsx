@@ -43,7 +43,7 @@ function GenderChart() {
                                     style: {
                                         fontSize: "16px",
                                         fontFamily: "inherit",
-                                        color: "hsl(var(--bc))",
+                                        color: "oklch(var(--bc))",
                                     },
                                 },
                                 yaxis: {
@@ -52,8 +52,8 @@ function GenderChart() {
                                             fontSize: "16px",
                                             fontFamily: "inherit",
                                             colors: [
-                                                "hsl(var(--bc))",
-                                                "hsl(var(--bc))",
+                                                "oklch(var(--bc))",
+                                                "oklch(var(--bc))",
                                             ],
                                         },
                                     },
@@ -68,8 +68,8 @@ function GenderChart() {
                                             fontSize: "16px",
                                             fontFamily: "inherit",
                                             colors: [
-                                                "hsl(var(--bc))",
-                                                "hsl(var(--bc))",
+                                                "oklch(var(--bc))",
+                                                "oklch(var(--bc))",
                                             ],
                                         },
                                     },
@@ -78,7 +78,7 @@ function GenderChart() {
                                     style: {
                                         fontSize: "16px",
                                         fontFamily: "inherit",
-                                        colors: ["hsl(var(--bc))"],
+                                        colors: ["oklch(var(--bc))"],
                                     },
                                 },
                             }}

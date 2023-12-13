@@ -471,7 +471,7 @@ function Page() {
                     <fieldset
                         className="border border-solid py-8 px-4"
                         style={{
-                            borderColor: "hsl(var(--bc) / 0.2",
+                            borderColor: "oklch(var(--bc) / 0.2",
                             borderRadius: "var(--rounded-btn, 0.5rem)",
                             borderWidth: 1,
                         }}

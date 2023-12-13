@@ -36,8 +36,8 @@ function LoginComponent() {
     };
     return (
         <div
-            data-theme="cupcake"
-            className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-gradient-to-tr from-secondary to-primary"
+            data-theme="lemonade"
+            className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-gradient-to-bl from-primary to-secondary"
         >
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                 <Image className="mx-auto h-32 w-auto" src={Logo} alt="logo" />

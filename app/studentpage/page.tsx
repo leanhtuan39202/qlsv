@@ -66,7 +66,7 @@ async function Page() {
                     className="card w-96 bg-base-200 shadow-xl"
                 >
                     <figure className="px-10 pt-10">
-                        <UserCircle2 size={48} color="hsl(var(--p))" />
+                        <UserCircle2 size={48} color="oklch(var(--p))" />
                     </figure>
                     <div className="card-body items-center text-center">
                         <h2 className="card-title">Thông tin cá nhân</h2>
@@ -77,7 +77,7 @@ async function Page() {
                     className="card w-96 bg-base-200 shadow-xl"
                 >
                     <figure className="px-10 pt-10">
-                        <PenSquare size={48} color="hsl(var(--s))" />
+                        <PenSquare size={48} color="oklch(var(--s))" />
                     </figure>
                     <div className="card-body items-center text-center">
                         <h2 className="card-title">Đăng kí học phần</h2>
@@ -88,7 +88,7 @@ async function Page() {
                     className="card w-96 bg-base-200 shadow-xl"
                 >
                     <figure className="px-10 pt-10">
-                        <BarChart size={48} color="hsl(var(--a))" />
+                        <BarChart size={48} color="oklch(var(--a))" />
                     </figure>
                     <div className="card-body items-center text-center">
                         <h2 className="card-title">Xem điểm</h2>
@@ -99,7 +99,7 @@ async function Page() {
                     className="card w-96 bg-base-200 shadow-xl"
                 >
                     <figure className="px-10 pt-10">
-                        <LockKeyhole size={48} color="hsl(var(--n))" />
+                        <LockKeyhole size={48} color="oklch(var(--n))" />
                     </figure>
                     <div className="card-body items-center text-center">
                         <h2 className="card-title">Đổi Mật khẩu</h2>

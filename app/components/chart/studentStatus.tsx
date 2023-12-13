@@ -44,13 +44,13 @@ function StudentStatus() {
                                     style: {
                                         fontSize: "16px",
                                         fontFamily: "inherit",
-                                        color: "hsl(var(--bc))",
+                                        color: "oklch(var(--bc))",
                                     },
                                 },
                                 legend: {
                                     position: "bottom",
                                     labels: {
-                                        colors: "hsl(var(--bc))",
+                                        colors: "oklch(var(--bc))",
                                     },
                                 },
 

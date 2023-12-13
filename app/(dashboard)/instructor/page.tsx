@@ -96,13 +96,13 @@ function Page() {
                             href={`/instructor/${params.value}`}
                             className="btn btn-link btn-xs"
                         >
-                            <Eye color="hsl(var(--su))" />
+                            <Eye color="oklch(var(--su))" />
                         </Link>
                         <Link
                             href={`/instructor/edit/${params.value}`}
                             className="btn btn-link btn-xs"
                         >
-                            <FileSignature color="hsl(var(--wa))" />
+                            <FileSignature color="oklch(var(--wa))" />
                         </Link>
                         <button
                             onClick={() => {
@@ -111,7 +111,7 @@ function Page() {
                             }}
                             className="btn btn-link btn-xs"
                         >
-                            <Trash2 color="hsl(var(--er))" />
+                            <Trash2 color="oklch(var(--er))" />
                         </button>
                     </div>
                 );

@@ -41,7 +41,7 @@ function AccountTable({ data }: Props) {
                             }}
                             className="btn btn-link btn-xs"
                         >
-                            <RotateCcw color="hsl(var(--p))" />
+                            <RotateCcw color="oklch(var(--p))" />
                         </button>
                     </div>
                 );

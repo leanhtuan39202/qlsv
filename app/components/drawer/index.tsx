@@ -62,7 +62,7 @@ const Drawer: React.FC<Props> = ({ children }) => {
                 <Navbar />
                 {children}
             </div>
-            <div className="drawer-side z-50">
+            <div className="drawer-side z-50 overflow-hidden">
                 <label
                     htmlFor="my-drawer"
                     aria-label="close sidebar"
@@ -79,7 +79,7 @@ const Drawer: React.FC<Props> = ({ children }) => {
                         </div>
                     </Link>
                 </div>
-                <ul className="menu p-4 w-80 min-h-full bg-base-300 text-base-content menu-lg space-y-4">
+                <ul className="menu p-4 w-80  bg-base-300 text-base-content menu-lg space-y-4  h-screen">
                     {menu.map((item) => (
                         <li key={item.label}>
                             <Link

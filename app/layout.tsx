@@ -23,7 +23,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en" data-theme="lemonade">
-            <meta name="theme-color" content="hsl(var(--p))" />
+            <meta name="theme-color" content="oklch(var(--p))" />
             <meta
                 name="viewport"
                 content="width=device-width, initial-scale=1.0"
@@ -31,7 +31,7 @@ export default function RootLayout({
             <body className={inter.className}>
                 <Toaster />
                 <NextTopLoader
-                    color="hsl(var(--a))"
+                    color="oklch(var(--a))"
                     height={5}
                     showSpinner={false}
                     speed={100}

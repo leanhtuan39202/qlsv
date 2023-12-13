@@ -12,21 +12,17 @@ function Tab({ params }: Props) {
     const [activeTab, setActiveTab] = React.useState(0);
 
     return (
-        <div className="tabs tab-lg">
+        <div role="tablist" className="tabs tabs-bordered w-96">
             <Link
                 onClick={() => setActiveTab(0)}
                 href={`/student/${id}`}
-                className={`tab tab-bordered  ${
-                    activeTab === 0 && "tab-active"
-                }`}
+                className={`tab   ${activeTab === 0 && "tab-active"}`}
             >
                 Chung
             </Link>
             <Link
                 onClick={() => setActiveTab(1)}
-                className={`tab tab-bordered  ${
-                    activeTab === 1 && "tab-active"
-                }`}
+                className={`tab   ${activeTab === 1 && "tab-active"}`}
                 href={`/student/${id}/mark`}
             >
                 Xem điểm

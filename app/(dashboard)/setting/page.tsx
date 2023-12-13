@@ -7,48 +7,24 @@ import Link from "next/link";
 function Page() {
     const themeList = [
         {
-            name: "Garden",
-            value: "garden",
-        },
-        {
-            name: "Acid",
-            value: "acid",
-        },
-        {
-            name: "Corporate",
-            value: "corporate",
-        },
-        {
-            name: "Black Pink",
-            value: "blackpink",
-        },
-        {
-            name: "Grey",
-            value: "wireframe",
-        },
-        {
             name: "Cmyk",
             value: "cmyk",
-        },
-        {
-            name: "Autumn",
-            value: "autumn",
-        },
-        {
-            name: "Bumble Bee",
-            value: "bumblebee",
         },
         {
             name: "Cupcake",
             value: "cupcake",
         },
         {
-            name: "Dark",
-            value: "dark",
+            name: "VNUA",
+            value: "lemonade",
         },
         {
-            name: "Vnua",
-            value: "lemonade",
+            name: "Nord",
+            value: "nord",
+        },
+        {
+            name: "Dark",
+            value: "sunset",
         },
     ];
     const chartStyles = [
@@ -144,7 +120,7 @@ function Page() {
                                         style: {
                                             fontSize: "16px",
                                             fontFamily: "inherit",
-                                            color: "hsl(var(--bc))",
+                                            color: "oklch(var(--bc))",
                                         },
                                     },
                                     yaxis: {
@@ -153,8 +129,8 @@ function Page() {
                                                 fontSize: "16px",
                                                 fontFamily: "inherit",
                                                 colors: [
-                                                    "hsl(var(--bc))",
-                                                    "hsl(var(--bc))",
+                                                    "oklch(var(--bc))",
+                                                    "oklch(var(--bc))",
                                                 ],
                                             },
                                         },
@@ -169,8 +145,8 @@ function Page() {
                                                 fontSize: "16px",
                                                 fontFamily: "inherit",
                                                 colors: [
-                                                    "hsl(var(--bc))",
-                                                    "hsl(var(--bc))",
+                                                    "oklch(var(--bc))",
+                                                    "oklch(var(--bc))",
                                                 ],
                                             },
                                         },
@@ -179,7 +155,7 @@ function Page() {
                                         style: {
                                             fontSize: "16px",
                                             fontFamily: "inherit",
-                                            colors: ["hsl(var(--bc))"],
+                                            colors: ["oklch(var(--bc))"],
                                         },
                                     },
                                 }}

@@ -40,6 +40,8 @@ const config: Config = {
             "night",
             "coffee",
             "winter",
+            "nord",
+            "sunset",
             {
                 blackpink: {
                     "primary": "#DE5784",

@@ -52,7 +52,7 @@
 //                                     style: {
 //                                         fontSize: "16px",
 //                                         fontFamily: "inherit",
-//                                         color: "hsl(var(--bc))",
+//                                         color: "oklch(var(--bc))",
 //                                     },
 //                                 },
 //                                 yaxis: {
@@ -61,11 +61,11 @@
 //                                             fontFamily: "inherit",
 //                                             fontSize: "10px",
 //                                             colors: [
-//                                                 "hsl(var(--bc))",
-//                                                 "hsl(var(--bc))",
-//                                                 "hsl(var(--bc))",
-//                                                 "hsl(var(--bc))",
-//                                                 "hsl(var(--bc))",
+//                                                 "oklch(var(--bc))",
+//                                                 "oklch(var(--bc))",
+//                                                 "oklch(var(--bc))",
+//                                                 "oklch(var(--bc))",
+//                                                 "oklch(var(--bc))",
 //                                             ],
 //                                         },
 //                                     },
@@ -83,11 +83,11 @@
 //                                             fontFamily: "inherit",
 //                                             fontSize: "10px",
 //                                             colors: [
-//                                                 "hsl(var(--bc))",
-//                                                 "hsl(var(--bc))",
-//                                                 "hsl(var(--bc))",
-//                                                 "hsl(var(--bc))",
-//                                                 "hsl(var(--bc))",
+//                                                 "oklch(var(--bc))",
+//                                                 "oklch(var(--bc))",
+//                                                 "oklch(var(--bc))",
+//                                                 "oklch(var(--bc))",
+//                                                 "oklch(var(--bc))",
 //                                             ],
 //                                         },
 //                                     },
@@ -96,7 +96,7 @@
 //                                     style: {
 //                                         fontSize: "16px",
 //                                         fontFamily: "inherit",
-//                                         colors: ["hsl(var(--bc))"],
+//                                         colors: ["oklch(var(--bc))"],
 //                                     },
 //                                 },
 //                             }}

@@ -9,7 +9,7 @@ function Logout() {
             onClick={() => signOut()}
         >
             <figure className="px-10 pt-10">
-                <LogOut size={48} color="hsl(var(--in))" />
+                <LogOut size={48} color="oklch(var(--in))" />
             </figure>
             <div className="card-body items-center text-center">
                 <h2 className="card-title">Đăng xuất</h2>

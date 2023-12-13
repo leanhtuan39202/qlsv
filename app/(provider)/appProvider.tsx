@@ -18,14 +18,14 @@ function AppProvider({ children }: IProps) {
     const [chartTheme, setChartTheme] = useState<string>("palette1");
 
     useEffect(() => {
-        const currentTheme = localStorage.getItem("theme");
+        const currentTheme = localStorage.getItem("theme_id");
         const currentChartTheme = localStorage.getItem("chartTheme");
         if (currentTheme) {
             setTheme(currentTheme as string);
             document.documentElement?.setAttribute("data-theme", currentTheme);
         } else {
-            setTheme("cmyk");
-            document.documentElement?.setAttribute("data-theme", "cmyk");
+            setTheme("lemonade");
+            document.documentElement?.setAttribute("data-theme", "lemonade");
         }
         if (currentChartTheme) {
             setChartTheme(currentChartTheme);
@@ -37,7 +37,7 @@ function AppProvider({ children }: IProps) {
     const changeTheme = (theme: string) => {
         setTheme(theme);
         document.documentElement?.setAttribute("data-theme", theme);
-        localStorage.setItem("theme", theme);
+        localStorage.setItem("theme_id", theme);
     };
     const changeChartTheme = (theme: string) => {
         setChartTheme(theme);

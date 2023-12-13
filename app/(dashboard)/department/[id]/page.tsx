@@ -170,7 +170,7 @@ const TableInstructor = ({ instructor }: { instructor: Instructor[] }) => {
                             href={`/instructor/${params.value}`}
                             className="btn btn-link btn-xs"
                         >
-                            <Eye color="hsl(var(--su))" />
+                            <Eye color="oklch(var(--su))" />
                         </Link>
                     </div>
                 );
@@ -244,7 +244,7 @@ const TableClass = ({ classes }: { classes: Classes[] }) => {
                             href={`/classes/${params.value}`}
                             className="btn btn-link btn-xs"
                         >
-                            <Eye color="hsl(var(--su))" />
+                            <Eye color="oklch(var(--su))" />
                         </Link>
                     </div>
                 );

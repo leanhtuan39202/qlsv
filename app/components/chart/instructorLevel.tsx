@@ -45,7 +45,7 @@ function InstructorLevel() {
                                     style: {
                                         fontSize: "16px",
                                         fontFamily: "inherit",
-                                        color: "hsl(var(--bc))",
+                                        color: "oklch(var(--bc))",
                                     },
                                 },
                                 yaxis: {
@@ -54,8 +54,8 @@ function InstructorLevel() {
                                             fontSize: "16px",
                                             fontFamily: "inherit",
                                             colors: [
-                                                "hsl(var(--bc))",
-                                                "hsl(var(--bc))",
+                                                "oklch(var(--bc))",
+                                                "oklch(var(--bc))",
                                             ],
                                         },
                                     },
@@ -75,8 +75,8 @@ function InstructorLevel() {
                                             fontSize: "12px",
                                             fontFamily: "inherit",
                                             colors: [
-                                                "hsl(var(--bc))",
-                                                "hsl(var(--bc))",
+                                                "oklch(var(--bc))",
+                                                "oklch(var(--bc))",
                                             ],
                                         },
                                     },
@@ -85,7 +85,7 @@ function InstructorLevel() {
                                     style: {
                                         fontSize: "16px",
                                         fontFamily: "inherit",
-                                        colors: ["hsl(var(--bc))"],
+                                        colors: ["oklch(var(--bc))"],
                                     },
                                 },
                             }}
