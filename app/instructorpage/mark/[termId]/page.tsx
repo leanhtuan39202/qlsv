@@ -3,17 +3,16 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { ScoreStatus } from "@prisma/client";
 import { enumToGradeString } from "@/utils/caculateScore";
-import {
-    editScore,
-    getScoreByTermId,
-} from "@/app/(dashboard)/lib/prisma/score";
-import { getTermById } from "@/app/(dashboard)/lib/prisma/term";
+import * as xlsx from "xlsx";
 import Link from "next/link";
+import { getTermById } from "@/app/(dashboard)/lib/prisma/term";
+import { editScore, getScoreByTermId } from "@/app/(dashboard)/lib/prisma/score";
 interface Props {
     params: {
         termId: string;
     };
 }
+
 function Page({ params }: Props) {
     const { termId } = params;
 
@@ -37,6 +36,27 @@ function Page({ params }: Props) {
         })();
     }, []);
 
+    const handleExport = () => {
+        const workBook = xlsx?.utils.book_new();
+        const dataToExport = score[0].Score.map((s: any, index: number) => {
+            return {
+                STT: index + 1,
+                "Mã sinh viên": s.Student.id,
+                "Họ và tên": s.Student.fullname,
+                "Điểm chuyên cần": s.CC,
+                "Điểm giữa kì": s.Midterm,
+                "Điểm cuối kì": s.Final,
+                "Điểm hệ 10": s.Total10,
+                "Điểm hệ 4": s.Total4,
+            };
+        });
+        const workSheet = xlsx?.utils.json_to_sheet(dataToExport);
+        xlsx?.utils.book_append_sheet(workBook, workSheet);
+        xlsx?.writeFile(
+            workBook,
+            `${term.id} - ${term?.name} - GV:${term?.instructor?.fullname}.xlsx`
+        );
+    };
     const save = async () => {
         const promise = [];
         for (let i = 0; i < score[0].Score.length; i++) {
@@ -75,10 +95,10 @@ function Page({ params }: Props) {
                     <button className="btn btn-secondary" onClick={save}>
                         Lưu
                     </button>
-                    <Link
-                        href={`/instructorpage/mark`}
-                        className="btn btn-accent"
-                    >
+                    <button className="btn btn-accent" onClick={handleExport}>
+                        Export
+                    </button>
+                    <Link href={"/score"} className="btn btn-accent">
                         Quay lại
                     </Link>
                 </div>
@@ -114,45 +134,74 @@ function Page({ params }: Props) {
                                 <td>
                                     <input
                                         onChange={(e) => {
-                                            score[0].Score[index].CC =
-                                                e.target.value;
+                                            score[0].Score[index].CC = Number(
+                                                e.target.value || 0
+                                            );
+                                            if (
+                                                score[0].Score[index].CC ==""
+                                            ) {
+                                                score[0].Score[index].CC = 0;
+                                            }
+                                            if (
+                                                score[0].Score[index].CC > 10.0
+                                            ) {
+                                                score[0].Score[index].CC = 10.0;
+                                            }
                                             setScore([...score]);
                                         }}
                                         disabled={!isEditing}
+                                        value={s.CC || ""}
                                         type="number"
                                         min={0}
-                                        max={10}
-                                        value={s.CC || 0}
+                                        max={10.0}
                                         className="input input-xs w-20 input-bordered"
                                     />
                                 </td>
                                 <td>
                                     <input
-                                        min={0}
-                                        max={10}
                                         onChange={(e) => {
                                             score[0].Score[index].Midterm =
-                                                e.target.value;
+                                                Number(e.target.value || 0);
+
+                                            if (
+                                                score[0].Score[index].Midterm >
+                                                10.0
+                                            ) {
+                                                score[0].Score[
+                                                    index
+                                                ].Midterm = 10.0;
+                                            }
+
                                             setScore([...score]);
                                         }}
                                         disabled={!isEditing}
                                         type="number"
-                                        value={s.Midterm || 0}
+                                        min={0.0}
+                                        max={10.0}
+                                        value={s.Midterm || ""}
                                         className="input input-xs w-20 input-bordered"
                                     />
                                 </td>
                                 <td>
                                     <input
-                                        min={0}
-                                        max={10}
                                         onChange={(e) => {
                                             score[0].Score[index].Final =
-                                                e.target.value;
+                                                Number(e.target.value || 0);
+                                            if (
+                                                score[0].Score[index].Final >
+                                                10.0
+                                            ) {
+                                                score[0].Score[
+                                                    index
+                                                ].Final = 10.0;
+                                            }
                                             setScore([...score]);
                                         }}
                                         disabled={!isEditing}
+                                        value={s.Final || ""}
                                         type="number"
-                                        value={s.Final || 0}
+                                        min={0.0}
+                                        max={10.0}
                                         className="input input-xs w-20 input-bordered"
                                     />
                                 </td>

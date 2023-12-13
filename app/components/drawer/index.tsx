@@ -62,7 +62,7 @@ const Drawer: React.FC<Props> = ({ children }) => {
                 <Navbar />
                 {children}
             </div>
-            <div className="drawer-side z-50 overflow-hidden">
+            <div className="drawer-side z-50">
                 <label
                     htmlFor="my-drawer"
                     aria-label="close sidebar"

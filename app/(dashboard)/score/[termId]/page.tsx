@@ -96,7 +96,7 @@ function Page({ params }: Props) {
                         Lưu
                     </button>
                     <button className="btn btn-accent" onClick={handleExport}>
-                        export
+                        Export
                     </button>
                     <Link href={"/score"} className="btn btn-accent">
                         Quay lại
@@ -138,6 +138,11 @@ function Page({ params }: Props) {
                                                 e.target.value || 0
                                             );
                                             if (
+                                                score[0].Score[index].CC ==""
+                                            ) {
+                                                score[0].Score[index].CC = 0;
+                                            }
+                                            if (
                                                 score[0].Score[index].CC > 10.0
                                             ) {
                                                 score[0].Score[index].CC = 10.0;
@@ -147,7 +152,7 @@ function Page({ params }: Props) {
                                         disabled={!isEditing}
                                         value={s.CC || ""}
                                         type="number"
-                                        min={0.0}
+                                        min={0}
                                         max={10.0}
                                         className="input input-xs w-20 input-bordered"
                                     />
