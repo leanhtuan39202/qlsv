@@ -133,7 +133,7 @@ model Instructor {
     fullname     String
     address      String
     email        String      @unique
-    phone        String
+    phone        String      @unique
     level        String
     departmentId String?
     department   Department? @relation(fields: [departmentId], references: [id], onUpdate: Cascade, onDelete: SetNull)

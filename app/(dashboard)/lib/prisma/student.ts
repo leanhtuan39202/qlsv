@@ -139,9 +139,11 @@ const createStudent = async (student: Student, StudentInfo: StudentInfo) => {
                 role: Role.STUDENT
             }
         })
+
         await prisma.student.create({
             data: student
         })
+
         await prisma.studentInfo.create({
             data: StudentInfo
         })
