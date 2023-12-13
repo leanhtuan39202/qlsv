@@ -47,6 +47,10 @@ const menu = [
         label: "Quản lý niên khoá",
         href: "/schoolyear",
     },
+    {
+        label: "Quản lý tài khoản",
+        href: "/users",
+    },
 ];
 const Drawer: React.FC<Props> = ({ children }) => {
     const pathName = usePathname();

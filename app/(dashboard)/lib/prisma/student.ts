@@ -2,6 +2,7 @@
 import { Role, Student, StudentInfo } from "@prisma/client";
 import prisma from ".";
 import { Md5 } from "ts-md5";
+import { DEFAULT_PASSWORD } from "@/constants";
 
 
 const getAllStudents = async () => {
@@ -66,15 +67,74 @@ const deleteStudent = async (id: string) => {
     })
     await prisma.user.delete({
         where: {
-            username:id
+            username: id
         }
     })
 }
 const createStudent = async (student: Student, StudentInfo: StudentInfo) => {
     try {
+
+        //check student exist
+        const checkStudent = await prisma.student.findUnique({
+            where: {
+                id: student.id
+            }
+        })
+        if (checkStudent) {
+            throw new Error('Mã sinh viên đã tồn tại')
+        }
+        //check unique email
+        const checkEmail = await prisma.studentInfo.findUnique({
+            where: {
+                email: StudentInfo.email
+            }
+        });
+        if (checkEmail) {
+            throw new Error('Email đã tồn tại');
+        }
+        //check id card
+        const checkIdCard = await prisma.studentInfo.findUnique({
+            where: {
+                identificationNumber: StudentInfo.identificationNumber
+            }
+        })
+        if (checkIdCard) {
+            throw new Error('Số CCCD đã tồn tại');
+        }
+        //check student phone number
+        const checkPhone = await prisma.studentInfo.findUnique({
+            where: {
+                phone: StudentInfo.phone
+            }
+        })
+        if (checkPhone) {
+            throw new Error('Số điện thoại đã tồn tại');
+        }
+
+        //check father phone number
+        const checkFatherPhone = await prisma.studentInfo.findUnique({
+            where: {
+                fatherPhone: StudentInfo.fatherPhone as string || ''
+            }
+        })
+
+        if (checkFatherPhone) {
+            throw new Error('SĐT cha đã tồn tại');
+        }
+        //check father phone number
+        const checkMotherPhone = await prisma.studentInfo.findUnique({
+            where: {
+                motherPhone: StudentInfo.motherPhone as string || ''
+            }
+        })
+
+        if (checkMotherPhone) {
+            throw new Error('SĐT mẹ đã tồn tại');
+        }
+
         await prisma.user.create({
             data: {
-                password: Md5.hashStr('1111'),
+                password: Md5.hashStr(DEFAULT_PASSWORD),
                 username: student.id,
                 role: Role.STUDENT
             }
@@ -85,6 +145,7 @@ const createStudent = async (student: Student, StudentInfo: StudentInfo) => {
         await prisma.studentInfo.create({
             data: StudentInfo
         })
+
     } catch (error) {
         throw error
     }

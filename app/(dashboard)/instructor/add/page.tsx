@@ -70,7 +70,7 @@ function Page() {
                         return "Thêm thành công";
                     },
                     error: (error) => {
-                        return "Thêm thất bại" + error.message;
+                        return "Thêm thất bại: " + error.message;
                     },
                 }
             );

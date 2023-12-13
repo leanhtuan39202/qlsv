@@ -1,3 +1,4 @@
+import { DEFAULT_PASSWORD } from '@/constants'
 import { PrismaClient, Role } from '@prisma/client'
 import { Md5 } from 'ts-md5'
 
@@ -23,7 +24,7 @@ const main = async () => {
         await prisma.user.create({
             data: {
                 username: 'admin',
-                password: Md5.hashStr('1111'),
+                password: Md5.hashStr(DEFAULT_PASSWORD),
                 role: Role.ADMIN
             }
         })

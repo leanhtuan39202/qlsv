@@ -33,8 +33,6 @@ function Page({ params }: Props) {
 
     const [listSchoolYear, setListSchoolYear] = useState<SchoolYear[]>([]);
 
-    const [listSpecialized, setListSpecialized] = useState<Specialized[]>([]);
-
     const [currentClass, setCurrentClass] = useState<any | null>(null);
 
     async function update(value: Classes) {
@@ -51,7 +49,6 @@ function Page({ params }: Props) {
         instructorId: Yup.string().required(
             "Vui lòng chọn giáo viên chủ nhiệm"
         ),
-        specialized_id: Yup.string().required("Vui lòng chọn chuyên ngành"),
     });
 
     const formik = useFormik<Classes>({
@@ -61,7 +58,6 @@ function Page({ params }: Props) {
             department_id: null,
             schoolyear_id: null,
             instructorId: null,
-            specialized_id: null,
         },
         validationSchema: formikSchema,
         onSubmit: (value) => {
@@ -78,24 +74,17 @@ function Page({ params }: Props) {
 
     useEffect(() => {
         (async () => {
-            const [
-                allIntructor,
-                allDepartment,
-                allSchoolYear,
-                allSpecialized,
-                currentClass,
-            ] = await Promise.all([
-                getAllIntructor(),
-                getAllDepartments(),
-                getAllSchoolYear(),
-                getAllSpecialized(),
-                getClassByIdWithNoRelation(id),
-            ]);
+            const [allIntructor, allDepartment, allSchoolYear, currentClass] =
+                await Promise.all([
+                    getAllIntructor(),
+                    getAllDepartments(),
+                    getAllSchoolYear(),
+                    getClassByIdWithNoRelation(id),
+                ]);
 
             setListIntructor(allIntructor.filter((i) => i.Classes === null));
             setListDepartment(allDepartment);
             setListSchoolYear(allSchoolYear);
-            setListSpecialized(allSpecialized);
             setCurrentClass(currentClass);
             formik.setValues(currentClass as any);
         })();
@@ -151,6 +140,7 @@ function Page({ params }: Props) {
                         <label htmlFor="name" className="p-2">
                             Giáo viên chủ nhiệm
                         </label>
+
                         <select
                             className="select select-bordered w-full max-w-sm"
                             name="instructorId"
@@ -227,35 +217,7 @@ function Page({ params }: Props) {
                             </span>
                         </p>
                     </div>
-                    <div className="form-control">
-                        <label htmlFor="name" className="p-2">
-                            Chuyên ngành
-                        </label>
-                        <select
-                            className="select select-bordered w-full max-w-sm"
-                            name="specialized_id"
-                            onChange={formik.handleChange}
-                        >
-                            {listSpecialized.map((specialized) => (
-                                <option
-                                    selected={
-                                        currentClass?.specialized?.id ===
-                                        specialized.id
-                                    }
-                                    key={specialized.id}
-                                    value={specialized.id}
-                                >
-                                    {specialized.name}
-                                </option>
-                            ))}
-                        </select>
-                        <p>
-                            <span className="text-error">
-                                {formik.touched.specialized_id &&
-                                    formik.errors.specialized_id}
-                            </span>
-                        </p>
-                    </div>
+
                     <div className="form-control">
                         <label htmlFor="name" className="p-2">
                             Niên khoá

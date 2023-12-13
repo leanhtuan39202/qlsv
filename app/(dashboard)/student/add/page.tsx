@@ -127,7 +127,7 @@ function Page() {
                     return "Thêm thành công";
                 },
                 error: (error) => {
-                    return "Thêm thất bại" + error;
+                    return "Thêm thất bại: " + error.message;
                 },
             });
         },
@@ -136,7 +136,7 @@ function Page() {
         student: Student;
         StudentInfo: Partial<StudentInfo>;
     }) => {
-        createStudent(
+        return await createStudent(
             {
                 ...value.student,
                 user_id: value.student.id,
@@ -463,7 +463,7 @@ function Page() {
                             </select>
                             <p>
                                 <span className="text-error">
-                                    {formik.errors.student?.class_id}
+                                    {formik.errors.student?.specialized_id}
                                 </span>
                             </p>
                         </div>

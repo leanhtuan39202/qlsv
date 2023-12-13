@@ -3,6 +3,9 @@
 import { Md5 } from 'ts-md5';
 import { redirect } from 'next/navigation';
 import prisma from '.'
+import { Role } from '@prisma/client';
+import { revalidatePath } from 'next/cache';
+import { DEFAULT_PASSWORD } from '@/constants';
 
 const login = async (username: string, password: string) => {
     const user = await prisma.user.findUnique({
@@ -45,7 +48,16 @@ const getUserbyUsername = async (userName: string) => {
     })
     return user
 }
-const resetPassword = async (username: string, password = '1111') => {
+
+const getUserByRole = async (role: Role) => {
+    const user = await prisma.user.findMany({
+        where: {
+            role
+        }
+    })
+    return user
+}
+const resetPassword = async (username: string, password = DEFAULT_PASSWORD) => {
     const user = await prisma.user.update({
         where: {
             username
@@ -54,6 +66,7 @@ const resetPassword = async (username: string, password = '1111') => {
             password: Md5.hashStr(password)
         }
     })
+    revalidatePath('/users')
     return user
 }
-export { login, getRole, changePassword, resetPassword, getUserbyUsername }
+export { login, getRole, changePassword, resetPassword, getUserbyUsername, getUserByRole }
