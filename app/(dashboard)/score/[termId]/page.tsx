@@ -98,11 +98,7 @@ function Page({ params }: Props) {
                     <button className="btn btn-accent" onClick={handleExport}>
                         export
                     </button>
-                    <Link
-                        href={"/score"}
-                        className="btn btn-accent"
-                        onClick={handleExport}
-                    >
+                    <Link href={"/score"} className="btn btn-accent">
                         Quay lại
                     </Link>
                 </div>
