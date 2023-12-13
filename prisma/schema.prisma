@@ -1,0 +1,206 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model Department {
+    id          String        @id
+    name        String
+    founding    DateTime
+    description String?
+    specialized Specialized[]
+    classes     Classes[]
+    Instructor  Instructor[]
+    Subject     Subject[]
+    Student     Student[]
+}
+
+model Specialized {
+    id            String      @id
+    name          String
+    description   String?
+    department_id String?
+    department    Department? @relation(fields: [department_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
+    classes       Classes[]
+    Student       Student[]
+}
+
+model SchoolYear {
+    id         Int       @id @default(autoincrement())
+    schoolyear String
+    classes    Classes[]
+    Student    Student[]
+}
+
+enum Status {
+    STUDYING
+    STOP
+    RESERVE
+}
+
+enum ScoreStatus {
+    PASSED
+    FAILED
+}
+
+enum ScoreText {
+    A
+    B_PLUS
+    B
+    C_PLUS
+    C
+    D_PLUS
+    D
+    F
+}
+
+enum Role {
+    STUDENT
+    INSTRUCTOR
+    ADMIN
+}
+
+enum TermStatus {
+    OPEN
+    CLOSED
+}
+
+model Classes {
+    id             String       @id
+    name           String
+    department_id  String?
+    specialized_id String?
+    schoolyear_id  Int?
+    instructorId   String?      @unique
+    department     Department?  @relation(fields: [department_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
+    specialized    Specialized? @relation(fields: [specialized_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
+    schoolyear     SchoolYear?  @relation(fields: [schoolyear_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
+    Student        Student[]
+    Instructor     Instructor?  @relation(fields: [instructorId], references: [id])
+}
+
+enum Gender {
+    MALE
+    FEMALE
+}
+
+model Subject {
+    id           String      @id
+    name         String
+    departmentId String?
+    credit       Int
+    department   Department? @relation(fields: [departmentId], references: [id], onUpdate: Cascade, onDelete: SetNull)
+    Term         Term[]
+}
+
+model Term {
+    id           String       @id
+    name         String
+    subject      Subject      @relation(fields: [subjectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    subjectId    String
+    Score        Score[]
+    instructorId String?
+    instructor   Instructor?  @relation(fields: [instructorId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+    Enrollment   Enrollment[]
+    status       TermStatus
+    maxStudent   Int          @default(60)
+}
+
+model Score {
+    id        Int          @id @default(autoincrement())
+    CC        Float?
+    Midterm   Float?
+    Final     Float?
+    Total4    Float?
+    Total10   Float?
+    studentId String
+    Student   Student      @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    term      Term         @relation(fields: [termId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    status    ScoreStatus?
+    termId    String
+    ScoreText ScoreText?
+}
+
+model Instructor {
+    id           String      @id
+    fullname     String
+    address      String
+    email        String      @unique
+    phone        String      @unique
+    level        String
+    departmentId String?
+    department   Department? @relation(fields: [departmentId], references: [id], onUpdate: Cascade, onDelete: SetNull)
+    image        String?     @db.LongText
+    gender       Gender
+    birth        DateTime
+    Classes      Classes?
+    Term         Term[]
+    user_id      String      @unique
+    user         User?       @relation(fields: [user_id], references: [username], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model Student {
+    id             String       @id
+    fullname       String
+    address        String
+    department     Department?  @relation(fields: [department_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
+    department_id  String?
+    schoolyear     SchoolYear?  @relation(fields: [schoolyear_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
+    schoolyear_id  Int?
+    specialized    Specialized? @relation(fields: [specialized_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
+    specialized_id String?
+    classes        Classes?     @relation(fields: [class_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
+    class_id       String?
+    Score          Score[]
+    StudentInfo    StudentInfo?
+    user_id        String       @unique
+    user           User?        @relation(fields: [user_id], references: [username], onUpdate: Cascade, onDelete: Cascade)
+    Enrollment     Enrollment[]
+}
+
+model User {
+    username   String      @id
+    password   String
+    role       Role
+    Student    Student?
+    Instructor Instructor?
+}
+
+model StudentInfo {
+    id                   String   @id
+    birth                DateTime
+    phone                String   @unique
+    Student              Student  @relation(fields: [student_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    student_id           String   @unique
+    status               Status   @default(STUDYING)
+    email                String   @unique
+    gender               Gender?
+    image                String?  @db.LongText
+    nation               String
+    religion             String?  @default("")
+    homeTown             String
+    fatherName           String
+    motherName           String
+    identificationNumber String   @unique
+    fatherPhone          String?  @unique
+    motherPhone          String?  @unique
+    motherWork           String?
+    fatherWork           String?
+    placeOfBirth         String
+}
+
+model Enrollment {
+    studentId String
+    termId    String
+    student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    term      Term    @relation(fields: [termId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+    @@id([studentId, termId])
+}
