@@ -28,6 +28,7 @@ model Specialized {
     description   String?
     department_id String?
     department    Department? @relation(fields: [department_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
+    classes       Classes[]
     Student       Student[]
 }
 
@@ -72,16 +73,17 @@ enum TermStatus {
 }
 
 model Classes {
-    id            String      @id
-    name          String
-    department_id String?
-    schoolyear_id Int?
-    instructorId  String?     @unique
-    department    Department? @relation(fields: [department_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
-
-    schoolyear SchoolYear? @relation(fields: [schoolyear_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
-    Student    Student[]
-    Instructor Instructor? @relation(fields: [instructorId], references: [id])
+    id             String       @id
+    name           String
+    department_id  String?
+    specialized_id String?
+    schoolyear_id  Int?
+    instructorId   String?      @unique
+    department     Department?  @relation(fields: [department_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
+    specialized    Specialized? @relation(fields: [specialized_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
+    schoolyear     SchoolYear?  @relation(fields: [schoolyear_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
+    Student        Student[]
+    Instructor     Instructor?  @relation(fields: [instructorId], references: [id])
 }
 
 enum Gender {
@@ -131,7 +133,7 @@ model Instructor {
     fullname     String
     address      String
     email        String      @unique
-    phone        String      @unique
+    phone        String
     level        String
     departmentId String?
     department   Department? @relation(fields: [departmentId], references: [id], onUpdate: Cascade, onDelete: SetNull)

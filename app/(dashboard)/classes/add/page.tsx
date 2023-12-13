@@ -25,6 +25,8 @@ function Page() {
 
     const [listSchoolYear, setListSchoolYear] = useState<SchoolYear[]>([]);
 
+    const [listSpecialized, setListSpecialized] = useState<Specialized[]>([]);
+
     async function add(value: Classes, student?: Student[]) {
         return await createClass(
             {
@@ -39,6 +41,10 @@ function Page() {
         name: Yup.string().required("Vui lòng nhập tên lớp"),
         department_id: Yup.string().required("Vui lòng chọn khoa"),
         schoolyear_id: Yup.string().required("Vui lòng chọn niên khoá"),
+        instructorId: Yup.string().required(
+            "Vui lòng chọn giáo viên chủ nhiệm"
+        ),
+        specialized_id: Yup.string().required("Vui lòng chọn chuyên ngành"),
     });
 
     const formik = useFormik<Classes>({
@@ -48,6 +54,7 @@ function Page() {
             department_id: null,
             schoolyear_id: null,
             instructorId: null,
+            specialized_id: null,
         },
         validationSchema: formikSchema,
         onSubmit: (value) => {
@@ -64,16 +71,18 @@ function Page() {
 
     useEffect(() => {
         (async () => {
-            const [allIntructor, allDepartment, allSchoolYear] =
+            const [allIntructor, allDepartment, allSchoolYear, allSpecialized] =
                 await Promise.all([
                     getAllIntructor(),
                     getAllDepartments(),
                     getAllSchoolYear(),
+                    getAllSpecialized(),
                 ]);
 
             setListIntructor(allIntructor.filter((i) => i.Classes === null));
             setListDepartment(allDepartment);
             setListSchoolYear(allSchoolYear);
+            setListSpecialized(allSpecialized);
         })();
     }, []);
 
@@ -194,7 +203,32 @@ function Page() {
                             </span>
                         </p>
                     </div>
-
+                    <div className="form-control">
+                        <label htmlFor="name" className="p-2">
+                            Chuyên ngành
+                        </label>
+                        <select
+                            className="select select-bordered w-full max-w-sm"
+                            name="specialized_id"
+                            onChange={formik.handleChange}
+                        >
+                            <option value={""}>Chọn chuyên ngành</option>
+                            {listSpecialized.map((specialized) => (
+                                <option
+                                    key={specialized.id}
+                                    value={specialized.id}
+                                >
+                                    {specialized.name}
+                                </option>
+                            ))}
+                        </select>
+                        <p>
+                            <span className="text-error">
+                                {formik.touched.specialized_id &&
+                                    formik.errors.specialized_id}
+                            </span>
+                        </p>
+                    </div>
                     <div className="form-control">
                         <label htmlFor="name" className="p-2">
                             Niên khoá
